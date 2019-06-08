@@ -3,8 +3,8 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import App from "./App";
-import Password from "./components/password";
-import NotFound from "./components/notfound";
+import Password from "./components/password.tsx";
+import NotFound from "./components/notfound.tsx";
 import * as serviceWorker from "./serviceWorker";
 import "bootstrap/dist/css/bootstrap.css";
 

@@ -1,26 +1,18 @@
 import React, { Component } from "react";
 import socketIOClient from "socket.io-client";
-import Signup from "./signup";
+import Signup from "./signup.tsx";
 
-export interface Password Props {
-  
-}
- 
-export interface Password State {
-  
-}
- 
-class Password  extends React.Component<Password Props, Password State> {
-  state = { :  }
-  render() { 
-    return (  );
-  }
-}
- 
-export default Password ;
+export interface PasswordProps {}
 
+export interface PasswordState {
+  endpoint: string;
+  mode: number;
+  roomName: string;
+  playerName: string;
+  listOfNames: string;
+}
 
-class Password extends ReactComponent {
+class Password extends React.Component<PasswordProps, PasswordState> {
   state = {
     endpoint: "localhost:4001/password",
     mode: 0,
@@ -31,7 +23,6 @@ class Password extends ReactComponent {
 
   constructor(props) {
     super(props);
-
     this.handlePlayer = this.handlePlayer.bind(this);
     this.handleRoom = this.handleRoom.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -65,21 +56,21 @@ class Password extends ReactComponent {
   }
 
   handleSubmit() {
-    if (this.state.playerName === "" || this.state.room === "") {
+    if (this.state.playerName === "" || this.state.roomName === "") {
     }
     const socket = socketIOClient(this.state.endpoint);
     socket.emit("sign up", {
       name: this.state.playerName,
-      room: this.state.room
+      room: this.state.roomName
     });
     this.setState({ mode: 1 });
   }
 
-  roomCreated = () => (
+  private roomCreated = () => (
     <div>
-      <h1> {this.state.value} </h1>
+      <h1> {this.state.roomName} </h1>
       <div>
-        <h2>Room successfully created</h2>
+        <h2>Room successfully joined</h2>
       </div>
       Members: {this.state.listOfNames}
       <div>Waiting for other players to join...</div>
@@ -92,7 +83,7 @@ class Password extends ReactComponent {
     </div>
   );
 
-  roomEnter = () => (
+  private roomEnter = () => (
     <div>
       <h1>Hi, Welcome to Password! </h1>
 
@@ -109,7 +100,7 @@ class Password extends ReactComponent {
           <input
             type="text"
             name="name"
-            value={this.state.room}
+            value={this.state.roomName}
             onChange={this.handleRoom}
           />
           <div>
