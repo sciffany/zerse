@@ -19,4 +19,8 @@ export default class Room {
   equals(otherRoom: Room) {
     otherRoom.name = this.name;
   }
+
+  getWatchers(): string {
+    return this.watchers.map(watcher => watcher.name).join(", ");
+  }
 }

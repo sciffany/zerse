@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import socketIOClient from "socket.io-client";
 import Signup from "./signup.tsx";
 
@@ -41,9 +41,9 @@ class Password extends React.Component<PasswordProps, PasswordState> {
 
   componentDidMount() {
     const socket = socketIOClient(this.state.endpoint);
-    socket.on("name", name => {
-      console.log(name);
-      this.setState({ listOfNames: name });
+    socket.on("person joined", listOfNames => {
+      console.log(listOfNames);
+      this.setState({ listOfNames: listOfNames });
     });
   }
 
@@ -72,7 +72,7 @@ class Password extends React.Component<PasswordProps, PasswordState> {
       <div>
         <h2>Room successfully joined</h2>
       </div>
-      Members: {this.state.listOfNames}
+      Watchers: {this.state.listOfNames}
       <div>Waiting for other players to join...</div>
       Team 1:
       <Signup name="1" color="1" />
@@ -86,28 +86,25 @@ class Password extends React.Component<PasswordProps, PasswordState> {
   private roomEnter = () => (
     <div>
       <h1>Hi, Welcome to Password! </h1>
-
-      <form>
+      <div>
+        <div>Player Name:</div>
+        <input
+          type="text"
+          name="name"
+          value={this.state.playerName}
+          onChange={this.handlePlayer}
+        />
+        <div>Room Name:</div>
+        <input
+          type="text"
+          name="name"
+          value={this.state.roomName}
+          onChange={this.handleRoom}
+        />
         <div>
-          <div>Player Name:</div>
-          <input
-            type="text"
-            name="name"
-            value={this.state.playerName}
-            onChange={this.handlePlayer}
-          />
-          <div>Room Name:</div>
-          <input
-            type="text"
-            name="name"
-            value={this.state.roomName}
-            onChange={this.handleRoom}
-          />
-          <div>
-            <button onClick={this.handleSubmit}>Create Room</button>
-          </div>
+          <button onClick={this.handleSubmit}>Create Room</button>
         </div>
-      </form>
+      </div>
     </div>
   );
 }

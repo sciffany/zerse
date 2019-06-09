@@ -2,7 +2,7 @@ import Room from "./password-room";
 
 export default class User {
   private id: number;
-  private name: string;
+  public name: string;
   private room: Room;
 
   constructor(name: string, room: Room) {

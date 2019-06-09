@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 export interface SignupProps {
   name: string;
   color: string;

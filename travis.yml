@@ -1,0 +1,2 @@
+language: ts_node
+node_js: - "8"

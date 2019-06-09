@@ -1,6 +1,8 @@
 import { Server } from "http";
 import User from "./password-user";
 import Room from "./password-room";
+import Express from "express";
+import SocketIO from "socket.io";
 
 export class PasswordServer {
   private static readonly PORT: Number = 4001;
@@ -10,7 +12,7 @@ export class PasswordServer {
   private app: Express.Application;
   private server: Server;
   private ioServer: SocketIO.Server;
-  private passwordio: SocketIO.Namespace;
+  private passwordio;
   private roomList: Room[] = [];
 
   constructor() {
@@ -35,19 +37,27 @@ export class PasswordServer {
     );
     this.passwordio.on("connection", socket => {
       socket.on("sign up", details => {
-        let roomToJoin: Room = this.roomList.find(
-          room => room.name === details.room
-        );
+        const callback = () => {
+          let roomToJoin: Room = this.roomList.find(
+            room => room.name === details.room
+          );
 
-        if (!roomToJoin) {
-          roomToJoin = new Room(details.room);
-          this.roomList.push(roomToJoin);
-        }
+          if (!roomToJoin) {
+            roomToJoin = new Room(details.room);
+            this.roomList.push(roomToJoin);
+          }
 
-        const user = new User(details.name, roomToJoin);
+          const user = new User(details.name, roomToJoin);
+          console.log(details.room);
 
-        socket.join(details.room);
-        this.passwordio.to(details.room).emit("person joined", details.name);
+          // this.passwordio.emit("person joined", roomToJoin.getWatchers());
+
+          this.ioServer
+            .to(details.room)
+            .emit("person joined", roomToJoin.getWatchers());
+        };
+
+        socket.join(details.room, callback);
       });
 
       socket.on("disconnect", () => {
