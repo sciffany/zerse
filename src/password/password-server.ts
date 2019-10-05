@@ -1,69 +1,94 @@
-import { Server } from "http";
-import User from "./password-user";
-import Room from "./password-room";
-import Express from "express";
-import SocketIO from "socket.io";
+import { Server } from "http"
+import User from "./password-user"
+import Room from "./password-room"
+import Express from "express"
+import SocketIO from "socket.io"
+import { disconnect } from "cluster"
 
 export class PasswordServer {
-  private static readonly PORT: Number = 4001;
-  private express = require("express");
-  private http = require("http");
-  private socketIO = require("socket.io");
-  private app: Express.Application;
-  private server: Server;
-  private ioServer: SocketIO.Server;
-  private passwordio;
-  private roomList: Room[] = [];
+  private static readonly PORT: Number = 4001
+  private express = require("express")
+  private http = require("http")
+  private socketIO = require("socket.io")
+  private app: Express.Application
+  private server: Server
+  private ioServer: SocketIO.Server
+  private passwordio
+  private roomList: Room[] = []
 
   constructor() {
-    this.initializeApp();
-    this.listen();
+    this.initializeApp()
+    this.listen()
   }
 
   initializeApp() {
-    this.app = this.express();
-    this.server = this.http.createServer(this.app);
-    this.ioServer = this.socketIO(this.server);
-    this.passwordio = this.ioServer.of("/password");
+    this.app = this.express()
+    this.server = this.http.createServer(this.app)
+    this.ioServer = this.socketIO(this.server)
+    this.passwordio = this.ioServer.of("/password")
   }
 
   getApp(): Express.Application {
-    return this.app;
+    return this.app
   }
 
   listen() {
     this.server.listen(PasswordServer.PORT, () =>
       console.log(`Listening on port ${PasswordServer.PORT}`)
-    );
+    )
     this.passwordio.on("connection", socket => {
+      var roomName
+      var userId
       socket.on("sign up", details => {
-        const callback = () => {
-          let roomToJoin: Room = this.roomList.find(
-            room => room.name === details.room
-          );
+        let roomToJoin: Room = this.roomList.find(
+          room => room.name === details.room
+        )
 
-          if (!roomToJoin) {
-            roomToJoin = new Room(details.room);
-            this.roomList.push(roomToJoin);
-          }
+        if (!roomToJoin) {
+          roomToJoin = new Room(details.room)
+          this.roomList.push(roomToJoin)
+        }
 
-          const user = new User(details.name, roomToJoin);
-          console.log(details.room);
+        try {
+          const user = new User(details.name, roomToJoin)
+          userId = user.id
+          console.log(userId)
+        } catch (err) {
+          socket.emit("err", "User with that name already inside")
+        }
 
-          // this.passwordio.emit("person joined", roomToJoin.getWatchers());
+        socket.join(details.room)
+        this.passwordio
+          .to(details.room)
+          .emit("person joined", {
+            watchers: roomToJoin.getWatchers(),
+            playerOrder: roomToJoin.getPlayerOrder()
+          })
+        roomName = details.room
+      })
 
-          this.ioServer
-            .to(details.room)
-            .emit("person joined", roomToJoin.getWatchers());
-        };
-
-        socket.join(details.room, callback);
-      });
+      socket.on("player order", details => {
+        const detail = { code: details.code, name: details.name }
+        this.findRoomByName(roomName).addDetail(detail)
+        this.passwordio.to(roomName).emit("person order", detail)
+      })
 
       socket.on("disconnect", () => {
-        this.passwordio.emit("user disconnect");
-        console.log("User disconnected");
-      });
-    });
+        if (!roomName) {
+          return
+        }
+        this.findRoomByName(roomName).removeWatcher(userId)
+        this.passwordio
+          .to(roomName)
+          .emit(
+            "user disconnected",
+            this.findRoomByName(roomName).getWatchers()
+          )
+      })
+    })
+  }
+
+  findRoomByName(roomName): Room {
+    return this.roomList.find(room => room.name === roomName)
   }
 }

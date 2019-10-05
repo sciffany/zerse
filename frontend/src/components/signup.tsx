@@ -1,16 +1,37 @@
-import React from "react";
+import React from "react"
+import Button from "react-bootstrap/Button"
+
 export interface SignupProps {
-  name: string;
-  color: string;
+  name: string
+  color: string
+  code: string
+  handleSignup: any
+  disabled: boolean
 }
 
 export interface SignupState {}
 
 class Signup extends React.Component<SignupProps, SignupState> {
-  state = {};
+  state = {}
+
+  constructor(props: any) {
+    super(props)
+    this.handleClick = this.handleClick.bind(this)
+  }
+
   render() {
-    return <button>Player {this.props.name}</button>;
+    return (
+      <div>
+        <Button onClick={this.handleClick} disabled={this.props.disabled}>
+          Player {this.props.name}{" "}
+        </Button>
+      </div>
+    )
+  }
+
+  handleClick(e: any) {
+    this.props.handleSignup(this.props.code)
   }
 }
 
-export default Signup;
+export default Signup

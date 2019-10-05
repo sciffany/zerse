@@ -1,0 +1,16 @@
+{
+  "name": "zerse",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon src/server.ts"
+  },
+  "dependencies": {
+    "@types/node": "^12.7.11",
+    "bootstrap": "^4.3.1",
+    "express": "^4.17.1",
+    "react-bootstrap": "^1.0.0-beta.14",
+    "socket.io": "^2.3.0",
+    "typescript": "^3.6.3"
+  }
+}
