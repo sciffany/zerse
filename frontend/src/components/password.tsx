@@ -81,6 +81,8 @@ class Password extends React.Component<PasswordProps, PasswordState> {
         listOfNames: details.listOfNames,
         playerOrder: details.playerOrder
       })
+      console.log(details.listOfNames)
+      console.log(details.playerOrder)
     })
 
     socket.on("person order", (details: PlayerDetail) => {
@@ -120,7 +122,7 @@ class Password extends React.Component<PasswordProps, PasswordState> {
             color="1"
             code="a"
             handleSignup={this.handlePerson}
-            disabled={this.state.assigned}
+            assigned={this.state.assigned}
           />
           {_.get(this.state.playerOrder, "a")}
         </div>
@@ -131,7 +133,7 @@ class Password extends React.Component<PasswordProps, PasswordState> {
             color="1"
             code="b"
             handleSignup={this.handlePerson}
-            disabled={this.state.assigned}
+            assigned={this.state.assigned}
           />
           {_.get(this.state.playerOrder, "b")}
         </div>
@@ -144,7 +146,7 @@ class Password extends React.Component<PasswordProps, PasswordState> {
             color="2"
             code="c"
             handleSignup={this.handlePerson}
-            disabled={this.state.assigned}
+            assigned={this.state.assigned}
           />
           {_.get(this.state.playerOrder, "c")}
         </div>
@@ -154,7 +156,7 @@ class Password extends React.Component<PasswordProps, PasswordState> {
             color="2"
             code="d"
             handleSignup={this.handlePerson}
-            disabled={this.state.assigned}
+            assigned={this.state.assigned}
           />
           {_.get(this.state.playerOrder, "d")}
         </div>

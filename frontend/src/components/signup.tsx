@@ -6,7 +6,7 @@ export interface SignupProps {
   color: string
   code: string
   handleSignup: any
-  disabled: boolean
+  assigned: boolean
 }
 
 export interface SignupState {}
@@ -22,7 +22,7 @@ class Signup extends React.Component<SignupProps, SignupState> {
   render() {
     return (
       <div>
-        <Button onClick={this.handleClick} disabled={this.props.disabled}>
+        <Button onClick={this.handleClick} disabled={this.props.assigned}>
           Player {this.props.name}{" "}
         </Button>
       </div>

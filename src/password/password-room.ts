@@ -7,7 +7,7 @@ interface PlayerOrder {
 export default class Room {
   public name: string
   private watchers: User[] = []
-  private playerOrder: PlayerOrder
+  private playerOrder: PlayerOrder = {}
   private playerFull: boolean
 
   constructor(name: string) {

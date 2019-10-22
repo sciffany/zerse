@@ -58,12 +58,10 @@ export class PasswordServer {
         }
 
         socket.join(details.room)
-        this.passwordio
-          .to(details.room)
-          .emit("person joined", {
-            watchers: roomToJoin.getWatchers(),
-            playerOrder: roomToJoin.getPlayerOrder()
-          })
+        this.passwordio.to(details.room).emit("person joined", {
+          listOfNames: roomToJoin.getWatchers(),
+          playerOrder: roomToJoin.getPlayerOrder()
+        })
         roomName = details.room
       })
 
