@@ -18,6 +18,7 @@ export class PasswordServer {
 
   constructor() {
     this.initializeApp()
+    this.routeStuff()
     this.listen()
   }
 
@@ -26,6 +27,14 @@ export class PasswordServer {
     this.server = this.http.createServer(this.app)
     this.ioServer = this.socketIO(this.server)
     this.passwordio = this.ioServer.of("/password")
+  }
+
+  routeStuff() {
+    this.app.get("/api", async (req, res) => {
+      try {
+        res.json({ moo: "moo" })
+      } catch (err) {}
+    })
   }
 
   getApp(): Express.Application {

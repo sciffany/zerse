@@ -39,7 +39,9 @@ class Password extends React.Component<PasswordProps, PasswordState> {
     listOfNames: [],
     playerOrder: {},
     assigned: false,
-    socket: socketIOClient("localhost:4001/password")
+    socket: socketIOClient(
+      "http://ec2-13-229-233-146.ap-southeast-1.compute.amazonaws.com:4001/password"
+    )
   }
 
   constructor(props: any) {
