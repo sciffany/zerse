@@ -1,6 +1,6 @@
 import React from "react"
 import socketIOClient from "socket.io-client"
-import Signup from "./signup"
+import Signup from "../signup"
 import * as _ from "lodash"
 import Button from "react-bootstrap/Button"
 import Form from "react-bootstrap/Form"
@@ -40,7 +40,8 @@ class Password extends React.Component<PasswordProps, PasswordState> {
     playerOrder: {},
     assigned: false,
     socket: socketIOClient(
-      "http://ec2-13-229-233-146.ap-southeast-1.compute.amazonaws.com:4001/password"
+      //http://ec2-13-229-233-146.ap-southeast-1.compute.amazonaws.com
+      "localhost:4001/password"
     )
   }
 
