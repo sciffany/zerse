@@ -4,6 +4,7 @@ In zerse/
 
 npm install
 npm install bootstrap
+npm install ts-node
 npm start
 
 In zerse/frontend

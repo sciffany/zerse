@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "nodemon src/server.ts",
-    "server": "babel-node ./src/server.ts",
+    "start": "nodemon -r tsconfig-paths/register src/main.ts",
+    "server": "babel-node ./src/main.ts",
     "dev": "NODE_ENV=development npm-run-all server"
   },
   "dependencies": {
@@ -15,12 +15,14 @@
     "express": "^4.17.1",
     "react-bootstrap": "^1.0.0-beta.14",
     "socket.io": "^2.3.0",
+    "ts-node": "^8.5.4",
     "typescript": "^3.6.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.4",
     "@babel/core": "^7.6.4",
     "@babel/node": "^7.6.3",
-    "@babel/preset-env": "^7.6.3"
+    "@babel/preset-env": "^7.6.3",
+    "tsconfig-paths": "^3.9.0"
   }
 }
