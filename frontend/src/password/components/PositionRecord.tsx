@@ -1,5 +1,5 @@
 import React from "react"
-import Button from "react-bootstrap/Button"
+import { Button } from "common/components/Styles"
 
 export interface Props {
   label: string
@@ -9,12 +9,15 @@ export interface Props {
 export interface SignupState {}
 
 export function PositionRecord({ label, key }: Props) {
-  // const handleClick = (e: any) => handleSignup(code)
   const [assigned, setAssigned] = React.useState(false)
 
+  const onClick = React.useCallback(() => 0, [])
   return (
-    <>
-      <Button disabled={assigned}> {label} </Button>
-    </>
+    <div margin-top="10px">
+      <Button onClick={onClick} disabled={assigned}>
+        {" "}
+        {label}{" "}
+      </Button>
+    </div>
   )
 }

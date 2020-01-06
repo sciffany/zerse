@@ -20,7 +20,6 @@ export class PasswordServer extends GameServer {
   handleSocket(socket) {
     handleSignup(socket, this.gameIo, this.lounge)
     handleSignout(socket, this.gameIo, this.lounge)
-
     handlePositionAssign(socket, this.gameIo, this.lounge)
   }
 }

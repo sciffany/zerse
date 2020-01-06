@@ -5,7 +5,7 @@ export type RoomName = string
 export type RoomId = number
 
 export default class Room {
-  static idAssign: RoomId = -1
+  static idAssign: RoomId = 1
   public id: RoomId
   public name: RoomName
   private users: User[]
@@ -21,7 +21,7 @@ export default class Room {
 
   createUser(userName: UserName): User {
     if (this.findUserByName(userName)) {
-      throw Error("User already exists")
+      throw new Error("User already exists")
     }
 
     const newUser = new User(userName, this)

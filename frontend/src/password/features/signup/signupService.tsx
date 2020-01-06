@@ -11,7 +11,7 @@ type HandleSignupArgs = {
   dispatch: any
 }
 
-export default function handleSignup({
+export function handleSignupService({
   socket,
   history,
   userName,
@@ -27,7 +27,9 @@ export default function handleSignup({
     history.push(routes.password.positionAssign)
   })
 
-  socket.on("errorMessage", (error: string) => dispatch(createError(error)))
+  socket.on("errorMessage", (error: string) => {
+    dispatch(createError(error))
+  })
   socket.on("personJoined", console.log)
 
   //   socket.on("person order", (details: PlayerDetail) => {
