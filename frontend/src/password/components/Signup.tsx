@@ -6,30 +6,38 @@ import Centered from "common/components/Centered"
 import { useHistory } from "react-router"
 import { Input } from "antd"
 
-import { useDispatch } from "react-redux"
 import { handleSignupService } from "password/features/signup/signupService"
+import passwordSelectors from "password/features/general/passwordSelector"
+import socketIOClient from "socket.io-client"
+import { useDispatch, useSelector } from "react-redux"
+
+import { addSocket } from "password/features/general/passwordActions"
+import config from "env"
 
 const Title = styled.h1``
 
 const Text = styled.div``
 
-interface Props {
-  socket: SocketIOClient.Socket
-}
-
-export default function Signup({ socket }: Props) {
+export default function Signup() {
   const [userName, setName] = React.useState("")
   const [roomName, setRoom] = React.useState("")
 
   const history = useHistory()
   const dispatch = useDispatch()
+  const socket = useSelector(passwordSelectors.socket)
 
-  const handleSignup = React.useCallback(
-    () =>
-      handleSignupService({ socket, history, userName, roomName, dispatch }),
-    [dispatch, history, roomName, socket, userName]
-  )
+  const handleSignup = React.useCallback(() => {
+    if (socket) {
+      handleSignupService({ socket, history, userName, roomName, dispatch })
+    }
+  }, [dispatch, history, roomName, socket, userName])
 
+  if (!socket) {
+    const newSocket = socketIOClient(
+      `${config.serverUrl}:${config.serverPort}/password`
+    )
+    dispatch(addSocket(newSocket))
+  }
   return (
     <>
       <Title>Password</Title>

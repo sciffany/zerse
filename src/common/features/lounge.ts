@@ -7,12 +7,23 @@ export default class Lounge {
     this.rooms = []
   }
 
+  existingRooms() {
+    return this.rooms.filter(room => !!room)
+  }
+
   findRoomByName(roomName: RoomName): Room {
-    return this.rooms.find(room => room.name === roomName)
+    if (!roomName) {
+      throw new Error("Room name cannot be empty.")
+    }
+    return this.existingRooms().find(room => room.name === roomName)
   }
 
   findRoomById(roomId: RoomId): Room {
-    return this.rooms.find(room => room.id === roomId)
+    const room = this.existingRooms().find(room => room.id === roomId)
+    if (!room) {
+      throw new Error("Cannot find room.")
+    }
+    return room
   }
 
   createRoom(roomName: RoomName): Room {
@@ -26,7 +37,10 @@ export default class Lounge {
   }
 
   deleteRoom(roomId: RoomId) {
-    const index = this.rooms.findIndex(room => room.id === roomId)
+    const index = this.rooms.findIndex(room => room && room.id === roomId)
+    if (index === undefined) {
+      throw new Error("Cannot find room to delete.")
+    }
     this.rooms[index] = undefined
   }
 }

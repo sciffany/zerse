@@ -1,5 +1,6 @@
 import User, { UserName, UserId } from "./user"
 import Lounge from "./lounge"
+import { PositionNumber } from "./position"
 
 export type RoomName = string
 export type RoomId = number
@@ -9,6 +10,8 @@ export default class Room {
   public id: RoomId
   public name: RoomName
   private users: User[]
+  private positions: User[]
+
   private capacity: number
   private lounge: Lounge
 
@@ -17,6 +20,7 @@ export default class Room {
     this.lounge = lounge
     this.id = Room.idAssign++
     this.users = []
+    this.positions = []
   }
 
   createUser(userName: UserName): User {
@@ -29,24 +33,59 @@ export default class Room {
     return newUser
   }
 
+  existingUsers() {
+    return this.users.filter(user => !!user)
+  }
+
   findUserByName(userName: UserName): User {
-    return this.users.find(user => user.name === userName)
+    if (!userName) {
+      throw new Error("User name cannot be empty.")
+    }
+    return this.existingUsers().find(user => user.name === userName)
   }
 
   findUserById(userId: UserId): User {
-    return this.users.find(user => user.id === userId)
+    const user = this.existingUsers().find(user => user.id === userId)
+    if (!user) {
+      throw new Error("Cannot find user.")
+    }
+    return user
   }
 
   getUserNames(): UserName[] {
-    return this.users.filter(user => !!user).map(user => user.name)
+    return this.existingUsers().map(user => user.name)
   }
 
   deleteUser(userId: UserId): void {
-    const index = this.users.findIndex(user => user.id === userId)
+    const index = this.users.findIndex(user => user && user.id === userId)
+    if (index === undefined) {
+      throw new Error("Cannot find user to delete.")
+    }
     this.users[index] = undefined
   }
 
   isEmpty(): boolean {
-    return !this.users.length
+    return !this.existingUsers().length
+  }
+
+  isPositionEmpty(position: PositionNumber): boolean {
+    return !this.positions[position]
+  }
+
+  assignPosition(position: PositionNumber, userId: UserId) {
+    this.deleteUserFromPositions(userId)
+    const user = this.findUserById(userId)
+    this.positions[position] = user
+    user.changePosition(position)
+  }
+
+  deleteUserFromPositions(userId: UserId) {
+    const index = this.positions.findIndex(user => user && user.id === userId)
+    this.positions[index] = undefined
+  }
+
+  getPositions(): UserName[] {
+    console.log(this.positions.map(user => (user ? user.name : undefined)))
+    return this.positions.map(user => (user ? user.name : undefined))
   }
 }

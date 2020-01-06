@@ -1,9 +1,14 @@
 import GameServer from "../server"
 import handleSignup from "./handlers/signup"
 import handleSignout from "./handlers/signout"
-import handlePositionAssign from "./handlers/positionAssign"
+import handleApplyPosition from "./handlers/applyPosition"
 
 import Lounge from "common/features/lounge"
+
+type SignupDetails = {
+  userName: string
+  roomName: string
+}
 
 export class PasswordServer extends GameServer {
   private lounge: Lounge
@@ -19,7 +24,7 @@ export class PasswordServer extends GameServer {
 
   handleSocket(socket) {
     handleSignup(socket, this.gameIo, this.lounge)
+    handleApplyPosition(socket, this.gameIo, this.lounge)
     handleSignout(socket, this.gameIo, this.lounge)
-    handlePositionAssign(socket, this.gameIo, this.lounge)
   }
 }

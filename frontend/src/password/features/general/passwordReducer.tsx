@@ -1,13 +1,16 @@
 import produce from "immer"
-import { ADD_SOCKET, CREATE_ERROR } from "./passwordActions"
+import { ADD_SOCKET, CREATE_ERROR, DELETE_ERROR } from "./passwordActions"
 import { PasswordState } from "./passwordTypes"
-import { SET_ROOM_NAME } from "../signup/signupActions"
+import { SET_USER_AND_ROOM, SET_ROOM_USERS } from "../signup/signupActions"
+import { SET_ROOM_POSITIONS } from "../positions/positionsActions"
 
 const defaultState: PasswordState = {
   socket: null,
   error: null,
+  userName: null,
   roomName: null,
-  roomUsers: []
+  roomUsers: [],
+  roomPositions: []
 }
 
 const passwordReducer = (prev = defaultState, action: any) =>
@@ -19,8 +22,18 @@ const passwordReducer = (prev = defaultState, action: any) =>
       case CREATE_ERROR:
         nxt.error = action.payload
         break
-      case SET_ROOM_NAME:
-        nxt.roomName = action.payload
+      case SET_USER_AND_ROOM:
+        nxt.userName = action.payload.userName
+        nxt.roomName = action.payload.roomName
+        break
+      case SET_ROOM_USERS:
+        nxt.roomUsers = action.payload
+        break
+      case SET_ROOM_POSITIONS:
+        nxt.roomPositions = action.payload
+        break
+      case DELETE_ERROR:
+        nxt.error = null
         break
     }
   })

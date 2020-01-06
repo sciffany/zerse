@@ -32,6 +32,7 @@ export default abstract class GameServer {
     this.server.listen(GameServer.PORT, () =>
       console.log(`Listening on port ${GameServer.PORT}`)
     )
-    this.gameIo.on("connection", socket => this.handleSocket(socket))
+
+    this.gameIo.on("connection", server => this.handleSocket(server))
   }
 }

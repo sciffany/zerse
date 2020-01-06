@@ -1,7 +1,8 @@
 import { UserName } from "../users/UserTypes"
-import { RoomName, setRoomName } from "./signupActions"
+import { RoomName, setRoomUsers, setUserAndRoom } from "./signupActions"
 import { createError } from "../general/passwordActions"
 import routes from "routes"
+import { setRoomPositions } from "../positions/positionsActions"
 
 type HandleSignupArgs = {
   socket: SocketIOClient.Socket
@@ -23,19 +24,18 @@ export function handleSignupService({
     userName
   })
   socket.on("signUpSuccess", () => {
-    dispatch(setRoomName(roomName))
+    dispatch(setUserAndRoom(userName, roomName))
     history.push(routes.password.positionAssign)
   })
 
   socket.on("errorMessage", (error: string) => {
     dispatch(createError(error))
   })
-  socket.on("personJoined", console.log)
 
-  //   socket.on("person order", (details: PlayerDetail) => {
-  //     this.setState(prevState => ({
-  //       playerOrder: { ...prevState.playerOrder, [details.code]: details.name }
-  //     }))
-  //     console.log(this.state.playerOrder)
-  //   })
+  socket.on("roomUsers", (roomUsers: UserName[]) =>
+    dispatch(setRoomUsers(roomUsers))
+  )
+  socket.on("roomPositions", (roomPositions: UserName[]) =>
+    dispatch(setRoomPositions(roomPositions))
+  )
 }

@@ -4,12 +4,14 @@ export const TopSpace = styled.div`
   margin-top: 30px;
 `
 
-interface ButtonProps {}
+interface ButtonProps {
+  height?: number
+}
 export const Button = styled.button<ButtonProps>`
   border-radius: 5px;
   display: flex;
   width: 200px;
-  height: 60px;
+  ${({ height }) => `height: ${height || 60}px`};
   color: royalblue;
   border: 2px solid;
   justify-content: center;

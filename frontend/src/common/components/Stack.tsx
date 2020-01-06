@@ -13,4 +13,17 @@ const Stack = styled.div<Props>`
   }
 `
 
+interface Props {
+  spacing: number
+}
+
+export const HorizontalStack = styled.div<Props>`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  > * + * {
+    margin-left: ${({ spacing }) => spacing}px;
+  }
+`
+
 export default Stack

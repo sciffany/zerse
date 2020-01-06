@@ -15,24 +15,21 @@ const handler = (socket, gameIo, lounge: Lounge) => ({
   userName,
   roomName
 }: SignupDetails) => {
-  const room: Room =
-    lounge.findRoomByName(roomName) || lounge.createRoom(roomName)
-
   try {
+    const room: Room =
+      lounge.findRoomByName(roomName) || lounge.createRoom(roomName)
+
     const user = room.createUser(userName)
 
     socket.join(room.id)
     socket.emit("signUpSuccess")
 
-    gameIo.to(room.id).emit("userJoined", {
-      listOfNames: room.getUserNames()
-    })
-
-    socket.userId = user.id
     socket.roomId = room.id
+    socket.userId = user.id
+
+    gameIo.to(room.id).emit("roomUsers", room.getUserNames())
+    socket.emit("roomPositions", room.getPositions())
   } catch (err) {
     socket.emit("errorMessage", err.message)
-    return {}
-  } finally {
   }
 }

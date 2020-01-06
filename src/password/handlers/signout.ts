@@ -1,17 +1,18 @@
 import Lounge from "common/features/lounge"
 
 export default function handleSignout(socket, gameIo, lounge: Lounge) {
-  var signOut = () => {
+  const signOut = () => {
     const { roomId, userId } = socket
-
-    if (!roomId) {
+    if (!roomId || !userId) {
       return
     }
 
     const room = lounge.findRoomById(roomId)
     room.deleteUser(userId)
 
-    if (room.isEmpty) {
+    gameIo.to(roomId).emit("roomUsers", room.getUserNames())
+
+    if (room.isEmpty()) {
       lounge.deleteRoom(roomId)
     } else {
       gameIo.to(roomId).emit("disconnect", {
@@ -20,6 +21,6 @@ export default function handleSignout(socket, gameIo, lounge: Lounge) {
     }
   }
 
-  socket.on("disconnect", () => signOut())
-  socket.on("signOut", () => signOut())
+  socket.on("signOut", signOut)
+  socket.on("disconnect", signOut)
 }
