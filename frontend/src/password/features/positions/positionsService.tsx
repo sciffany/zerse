@@ -21,3 +21,14 @@ export function applyPositionService({
     dispatch(createError(error))
   })
 }
+
+export function startGameService({
+  socket,
+  history,
+  dispatch,
+  position
+}: ApplyPositionArgs) {
+  socket.on("errorMessage", (error: string) => {
+    dispatch(createError(error))
+  })
+}

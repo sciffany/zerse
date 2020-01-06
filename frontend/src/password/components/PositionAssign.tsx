@@ -2,6 +2,8 @@ import React from "react"
 import { PositionRecord } from "./PositionRecord"
 import Stack, { HorizontalStack } from "common/components/Stack"
 import Divider from "common/components/Divider"
+import { Button } from "common/components/Styles"
+import Centered from "common/components/Centered"
 
 import passwordSelectors from "password/features/general/passwordSelector"
 import { Spin } from "antd"
@@ -15,7 +17,7 @@ export default function PositionAssign() {
   const userName = useSelector(passwordSelectors.userName)
   const roomName = useSelector(passwordSelectors.roomName)
   const roomUsers = useSelector(passwordSelectors.roomUsers)
-  const roomPositions = useSelector(passwordSelectors.roomPositions)
+  const roomPositions = useSelector(passwordSelectors.roomPositions) || []
   const socket = useSelector(passwordSelectors.socket)
   const dispatch = useDispatch()
   const history = useHistory()
@@ -34,6 +36,8 @@ export default function PositionAssign() {
     return <Redirect to={routes.password.home} />
   }
 
+  const Text = styled.div``
+
   const BoldText = styled.div`
     font-weight: bold;
   `
@@ -49,10 +53,12 @@ export default function PositionAssign() {
           Name: <b>{userName}</b>
         </RightAlign>
         <Divider />
-        <div>
-          Room <b>{roomName}</b> successfully joined
-        </div>
-        Players: <b>{roomUsers && roomUsers.join(", ")}</b>
+        <Text>
+          Room <b>{roomName}</b> successfully joined{" "}
+        </Text>
+        <Text>
+          Players: <b>{roomUsers && roomUsers.join(", ")}</b>
+        </Text>
         <Divider />
         <div>
           Waiting for other players to join <Spin />
@@ -65,6 +71,7 @@ export default function PositionAssign() {
                 label={`Player ${index + 1}`}
                 position={number}
                 applyPosition={applyPosition}
+                color={"royalblue"}
                 userName={roomPositions && roomPositions[number]}
               />
             ))}
@@ -76,11 +83,17 @@ export default function PositionAssign() {
                 label={`Player ${index + 1}`}
                 position={number}
                 applyPosition={applyPosition}
+                color={"red"}
                 userName={roomPositions && roomPositions[number]}
               />
             ))}
           </Stack>
         </HorizontalStack>
+        {roomPositions.filter(user => !!user).length === 1 && (
+          <Centered>
+            <Button color={"mediumseagreen"}>Play Now!</Button>
+          </Centered>
+        )}
       </Stack>
     </>
   )

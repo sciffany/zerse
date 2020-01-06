@@ -8,6 +8,7 @@ export interface Props {
   position: PositionNumber
   applyPosition: (key: number) => any
   userName: UserName | null
+  color: any
 }
 
 export interface SignupState {}
@@ -16,17 +17,15 @@ export function PositionRecord({
   label,
   position,
   applyPosition,
-  userName
+  userName,
+  color
 }: Props) {
   const onClick = () => {
     applyPosition(position)
   }
   return (
-    <div margin-top="10px">
-      <Button onClick={onClick} disabled={!!userName} height={40}>
-        {" "}
-        {userName || label}{" "}
-      </Button>
-    </div>
+    <Button color={color} onClick={onClick} disabled={!!userName} height={40}>
+      {userName || label}
+    </Button>
   )
 }

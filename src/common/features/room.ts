@@ -11,8 +11,6 @@ export default class Room {
   public name: RoomName
   private users: User[]
   private positions: User[]
-
-  private capacity: number
   private lounge: Lounge
 
   constructor(name: string, lounge: Lounge) {
@@ -85,7 +83,10 @@ export default class Room {
   }
 
   getPositions(): UserName[] {
-    console.log(this.positions.map(user => (user ? user.name : undefined)))
     return this.positions.map(user => (user ? user.name : undefined))
+  }
+
+  getLeader(): UserName {
+    return this.users.find(user => !!user).name
   }
 }
