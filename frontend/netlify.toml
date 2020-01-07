@@ -1,0 +1,2 @@
+[context.production]
+    REACT_APP_QWERTY="qwerty"
