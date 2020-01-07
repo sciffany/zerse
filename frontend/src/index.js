@@ -5,6 +5,7 @@ import * as serviceWorker from "./serviceWorker"
 import "antd/dist/antd.css"
 import React from "react"
 
+console.log(process.env.REACT_APP_ASDF)
 console.log(process.env.REACT_APP_QWERTY)
 
 ReactDOM.render(<App />, document.getElementById("root"))
