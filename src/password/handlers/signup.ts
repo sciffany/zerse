@@ -19,7 +19,7 @@ const handler = (socket, gameIo, lounge: Lounge) => ({
     const room: Room =
       lounge.findRoomByName(roomName) || lounge.createRoom(roomName)
 
-    const user = room.createUser(userName)
+    const user = room.createUser(userName, socket.id)
 
     socket.join(room.id)
     socket.emit("signUpSuccess")

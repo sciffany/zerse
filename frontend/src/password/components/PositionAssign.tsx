@@ -9,42 +9,66 @@ import passwordSelectors from "password/features/general/passwordSelector"
 import { Spin } from "antd"
 import { useSelector, useDispatch } from "react-redux"
 import { useHistory, Redirect } from "react-router"
-import { applyPositionService } from "password/features/positions/positionsService"
+import {
+  applyPositionService,
+  startGameService
+} from "password/features/positions/positionsService"
 import routes from "routes"
 import styled from "styled-components"
+import { UserName } from "password/features/users/UserTypes"
+
+const Text = styled.div``
+
+const BoldText = styled.div`
+  font-weight: bold;
+`
+
+const RightAlign = styled.div`
+  display: flex;
+`
 
 export default function PositionAssign() {
   const userName = useSelector(passwordSelectors.userName)
   const roomName = useSelector(passwordSelectors.roomName)
-  const roomUsers = useSelector(passwordSelectors.roomUsers)
-  const roomPositions = useSelector(passwordSelectors.roomPositions) || []
   const socket = useSelector(passwordSelectors.socket)
   const dispatch = useDispatch()
   const history = useHistory()
 
   const applyPosition = React.useCallback(
     (key: number) => {
-      if (!socket) {
-        return
-      }
-      applyPositionService({ socket, dispatch, history, position: key })
+      applyPositionService({
+        socket: socket!,
+        dispatch,
+        history,
+        position: key
+      })
     },
     [dispatch, history, socket]
   )
+
+  const startGame = React.useCallback(() => {
+    startGameService({ socket: socket!, dispatch, history })
+  }, [dispatch, history, socket])
+
+  const [roomUsers, setRoomUsers] = React.useState([] as UserName[])
+  const [playButtonVisibility, setPlayButtonVisibility] = React.useState(false)
+  const [roomPositions, setRoomPositions] = React.useState([] as UserName[])
 
   if (!socket) {
     return <Redirect to={routes.password.home} />
   }
 
-  const Text = styled.div``
+  socket.on("readyPlay", () => {
+    setPlayButtonVisibility(true)
+  })
 
-  const BoldText = styled.div`
-    font-weight: bold;
-  `
+  socket.on("roomPositions", (roomPositions: UserName[]) => {
+    setRoomPositions(roomPositions)
+  })
 
-  const RightAlign = styled.div`
-    display: flex;
-  `
+  socket.on("roomUsers", (roomUsers: UserName[]) => {
+    setRoomUsers(roomUsers)
+  })
 
   return (
     <>
@@ -68,6 +92,7 @@ export default function PositionAssign() {
             <BoldText>Team 1 </BoldText>
             {[0, 1].map((number, index) => (
               <PositionRecord
+                key={number.toString()}
                 label={`Player ${index + 1}`}
                 position={number}
                 applyPosition={applyPosition}
@@ -80,6 +105,7 @@ export default function PositionAssign() {
             <BoldText>Team 2 </BoldText>
             {[2, 3].map((number, index) => (
               <PositionRecord
+                key={number.toString()}
                 label={`Player ${index + 1}`}
                 position={number}
                 applyPosition={applyPosition}
@@ -89,9 +115,11 @@ export default function PositionAssign() {
             ))}
           </Stack>
         </HorizontalStack>
-        {roomPositions.filter(user => !!user).length === 1 && (
+        {playButtonVisibility && (
           <Centered>
-            <Button color={"mediumseagreen"}>Play Now!</Button>
+            <Button color={"mediumseagreen"} onClick={startGame}>
+              Play Now!
+            </Button>
           </Centered>
         )}
       </Stack>

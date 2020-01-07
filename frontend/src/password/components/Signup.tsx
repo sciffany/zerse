@@ -38,6 +38,11 @@ export default function Signup() {
     )
     dispatch(addSocket(newSocket))
   }
+
+  if (!socket) {
+    return <></>
+  }
+
   return (
     <>
       <Title>Password</Title>

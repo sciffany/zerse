@@ -17,6 +17,9 @@ const handler = (socket, gameIo, lounge: Lounge) => ({
     if (room.isPositionEmpty(position)) {
       room.assignPosition(position, userId)
     }
+    if (room.arePositionsFilled()) {
+      gameIo.to(room.getLeader().socketId).emit("readyPlay")
+    }
     gameIo.to(room.id).emit("roomPositions", room.getPositions())
   } catch (err) {
     socket.emit("errorMessage", err.message)

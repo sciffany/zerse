@@ -1,5 +1,5 @@
-import Lounge from "src/common/features/lounge"
-import Room from "common/features/room"
+import Lounge from "common/features/lounge"
+import Room, { RoomName } from "common/features/room"
 import PasswordRoom from "./room"
 
 export default class PasswordLounge extends Lounge {
@@ -7,7 +7,7 @@ export default class PasswordLounge extends Lounge {
     super()
   }
 
-  newRoom(roomName) {
+  createNewRoom(roomName: RoomName) {
     return new PasswordRoom(roomName, this)
   }
 }

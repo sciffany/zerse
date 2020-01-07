@@ -1,11 +1,11 @@
-import { UserName } from "../users/UserTypes"
 import { createError } from "../general/passwordActions"
 import { ServiceArgs } from "../general/passwordTypes"
-import { setRoomPositions } from "./positionsActions"
 
 type ApplyPositionArgs = ServiceArgs & {
   position: number
 }
+
+type StartGameArgs = ServiceArgs
 
 export function applyPositionService({
   socket,
@@ -22,12 +22,9 @@ export function applyPositionService({
   })
 }
 
-export function startGameService({
-  socket,
-  history,
-  dispatch,
-  position
-}: ApplyPositionArgs) {
+export function startGameService({ socket, history, dispatch }: StartGameArgs) {
+  socket.emit("startGame")
+
   socket.on("errorMessage", (error: string) => {
     dispatch(createError(error))
   })

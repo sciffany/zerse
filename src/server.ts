@@ -9,19 +9,18 @@ export default abstract class GameServer {
   private static readonly PORT: Number = 4001
 
   gameIo
-  abstract getGameRoute(): String
   abstract handleSocket(socket: SocketIO.Socket): void
 
-  constructor() {
-    this.initializeApp()
+  constructor(gameRoute: string) {
+    this.initializeApp(gameRoute)
     this.listen()
   }
 
-  initializeApp() {
+  initializeApp(gameRoute: string) {
     this.app = express()
     this.server = createServer(this.app)
     this.ioServer = SocketIO(this.server)
-    this.gameIo = this.ioServer.of(this.getGameRoute())
+    this.gameIo = this.ioServer.of(gameRoute)
   }
 
   getApp() {
@@ -33,6 +32,9 @@ export default abstract class GameServer {
       console.log(`Listening on port ${GameServer.PORT}`)
     )
 
-    this.gameIo.on("connection", server => this.handleSocket(server))
+    this.gameIo.on("connection", socket => {
+      console.log(socket.id, "connected")
+      this.handleSocket(socket)
+    })
   }
 }

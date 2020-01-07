@@ -1,6 +1,6 @@
 import Room, { RoomName, RoomId } from "../features/room"
 
-export default class Lounge {
+export default abstract class Lounge {
   private rooms: Room[]
 
   constructor() {
@@ -26,8 +26,10 @@ export default class Lounge {
     return room
   }
 
+  abstract createNewRoom(roomName: RoomName)
+
   createRoom(roomName: RoomName): Room {
-    const newRoom = new Room(roomName, this)
+    const newRoom = this.createNewRoom(roomName)
     this.rooms.push(newRoom)
     return newRoom
   }

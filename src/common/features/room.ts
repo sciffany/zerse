@@ -1,17 +1,18 @@
-import User, { UserName, UserId } from "./user"
+import User, { UserName, UserId, SocketId } from "./user"
 import Lounge from "./lounge"
 import { PositionNumber } from "./position"
 
 export type RoomName = string
 export type RoomId = number
 
-export default class Room {
+export default abstract class Room {
   static idAssign: RoomId = 1
   public id: RoomId
   public name: RoomName
   private users: User[]
   private positions: User[]
   private lounge: Lounge
+  protected abstract capacity: number
 
   constructor(name: string, lounge: Lounge) {
     this.name = name
@@ -21,12 +22,12 @@ export default class Room {
     this.positions = []
   }
 
-  createUser(userName: UserName): User {
+  createUser(userName: UserName, socketId: SocketId): User {
     if (this.findUserByName(userName)) {
       throw new Error("User already exists")
     }
 
-    const newUser = new User(userName, this)
+    const newUser = new User(userName, socketId, this)
     this.users.push(newUser)
     return newUser
   }
@@ -86,7 +87,11 @@ export default class Room {
     return this.positions.map(user => (user ? user.name : undefined))
   }
 
-  getLeader(): UserName {
-    return this.users.find(user => !!user).name
+  getLeader(): User {
+    return this.users.find(user => !!user)
+  }
+
+  arePositionsFilled(): boolean {
+    return this.positions.filter(user => !!user).length === this.capacity
   }
 }
