@@ -10,3 +10,5 @@ npm start
 In zerse/frontend
 npm install
 npm start
+
+Hello world!
