@@ -1,6 +1,6 @@
 import Lounge from "common/features/lounge"
 import Room, { RoomName } from "common/features/room"
-import PasswordRoom from "./room"
+import PasswordRoom from "./passwordRoom"
 
 export default class PasswordLounge extends Lounge {
   constructor() {

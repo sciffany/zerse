@@ -1,8 +1,8 @@
 import React from "react"
 import styled from "styled-components"
-import { Button } from "common/components/Styles"
-import Stack from "common/components/Stack"
-import Centered from "common/components/Centered"
+import { Button } from "password/common/Styles"
+import Stack from "password/common/Stack"
+import Centered from "password/common/Centered"
 import { useHistory } from "react-router"
 import { Input } from "antd"
 
@@ -27,9 +27,10 @@ export default function Signup() {
   const socket = useSelector(passwordSelectors.socket)
 
   const handleSignup = React.useCallback(() => {
-    if (socket) {
-      handleSignupService({ socket, history, userName, roomName, dispatch })
+    if (!socket) {
+      return
     }
+    handleSignupService({ socket, history, userName, roomName, dispatch })
   }, [dispatch, history, roomName, socket, userName])
 
   if (!socket) {

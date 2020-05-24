@@ -1,16 +1,12 @@
-import GameServer from "../server"
+import Lounge from "common/features/lounge"
+
+import GameServer from "../gameServer"
 import handleSignup from "./handlers/signup"
 import handleSignout from "./handlers/signout"
 import handleApplyPosition from "./handlers/applyPosition"
 import handleStartGame from "./handlers/startGame"
-
-import Lounge from "common/features/lounge"
-import PasswordLounge from "./features/lounge"
-
-type SignupDetails = {
-  userName: string
-  roomName: string
-}
+import PasswordLounge from "./features/passwordLounge"
+import { PasswordSocket } from "./passwordTypes"
 
 export class PasswordServer extends GameServer {
   private lounge: Lounge
@@ -20,7 +16,7 @@ export class PasswordServer extends GameServer {
     this.lounge = new PasswordLounge()
   }
 
-  handleSocket(socket) {
+  handleSocket(socket: PasswordSocket) {
     handleSignup(socket, this.gameIo, this.lounge)
     handleApplyPosition(socket, this.gameIo, this.lounge)
     handleStartGame(socket, this.gameIo, this.lounge)

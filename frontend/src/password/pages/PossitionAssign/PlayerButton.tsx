@@ -1,5 +1,5 @@
 import React from "react"
-import { Button } from "common/components/Styles"
+import { Button } from "password/common/Styles"
 import { PositionNumber } from "password/features/positions/positionsTypes"
 import { UserName } from "password/features/users/UserTypes"
 

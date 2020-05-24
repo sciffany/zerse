@@ -8,7 +8,7 @@ export type SocketId = number
 export default class User {
   static idAssign: UserId = 1
   public id: UserId
-  public name: UserName
+  private name: UserName
   private room: Room
   private position: PositionNumber
   public socketId: SocketId
@@ -22,5 +22,17 @@ export default class User {
 
   changePosition(position: PositionNumber) {
     this.position = position
+  }
+
+  getName(): UserName {
+    return this.name
+  }
+
+  getRoom(): Room {
+    return this.room
+  }
+
+  getPosition(): PositionNumber {
+    return this.position
   }
 }

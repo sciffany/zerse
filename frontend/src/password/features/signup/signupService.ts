@@ -1,8 +1,7 @@
 import { UserName } from "../users/UserTypes"
-import { RoomName, setRoomUsers, setUserAndRoom } from "./signupActions"
+import { RoomName, setUserAndRoom } from "./signupActions"
 import { createError } from "../general/passwordActions"
 import routes from "routes"
-import { setRoomPositions } from "../positions/positionsActions"
 
 type HandleSignupArgs = {
   socket: SocketIOClient.Socket
@@ -26,16 +25,9 @@ export function handleSignupService({
   socket.on("signUpSuccess", () => {
     dispatch(setUserAndRoom(userName, roomName))
     history.push(routes.password.positionAssign)
+    socket.removeListener("signUpSucess")
   })
-
   socket.on("errorMessage", (error: string) => {
     dispatch(createError(error))
   })
-
-  socket.on("roomUsers", (roomUsers: UserName[]) =>
-    dispatch(setRoomUsers(roomUsers))
-  )
-  socket.on("roomPositions", (roomPositions: UserName[]) =>
-    dispatch(setRoomPositions(roomPositions))
-  )
 }

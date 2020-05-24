@@ -1,5 +1,5 @@
 import { StateType } from "typesafe-actions"
-import rootReducer from "infrastructure/rootReducer"
+import rootReducer from "password/infrastructure/rootReducer"
 import { PasswordState } from "./passwordTypes"
 
 type RootState = StateType<typeof rootReducer>

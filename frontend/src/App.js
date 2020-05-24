@@ -4,14 +4,14 @@ import { Route, Switch, BrowserRouter as Router } from "react-router-dom"
 import { Provider } from "react-redux"
 
 import "./App.css"
-import Password from "password/components/PasswordRouter"
+import Password from "password/pages/Password"
 import Welcome from "welcome/Welcome"
-import Centered from "common/components/Centered"
-import NotFound from "common/components/Notfound"
-import { TopSpace } from "common/components/Styles"
+import Centered from "password/common/Centered"
+import NotFound from "password/common/Notfound"
+import { TopSpace } from "password/common/Styles"
 import { createStore } from "redux"
 
-import rootReducer from "infrastructure/rootReducer"
+import rootReducer from "password/infrastructure/rootReducer"
 
 const store = createStore(
   rootReducer,

@@ -26,4 +26,17 @@ export const HorizontalStack = styled.div<Props>`
   }
 `
 
+interface Props {
+  spacing: number
+}
+
+export const VerticalStack = styled.div<Props>`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  > * + * {
+    margin-left: ${({ spacing }) => spacing}px;
+  }
+`
+
 export default Stack

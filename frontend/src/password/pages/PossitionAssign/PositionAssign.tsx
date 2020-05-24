@@ -1,18 +1,14 @@
 import React from "react"
-import { PositionRecord } from "./PositionRecord"
-import Stack, { HorizontalStack } from "common/components/Stack"
-import Divider from "common/components/Divider"
-import { Button } from "common/components/Styles"
-import Centered from "common/components/Centered"
+import { PositionRecord } from "./PlayerButton"
+import Stack, { HorizontalStack } from "password/common/Stack"
+import Divider from "password/common/Divider"
+import { Button } from "password/common/Styles"
+import Centered from "password/common/Centered"
 
 import passwordSelectors from "password/features/general/passwordSelector"
 import { Spin } from "antd"
-import { useSelector, useDispatch } from "react-redux"
-import { useHistory, Redirect } from "react-router"
-import {
-  applyPositionService,
-  startGameService
-} from "password/features/positions/positionsService"
+import { useSelector } from "react-redux"
+import { Redirect, useHistory } from "react-router"
 import routes from "routes"
 import styled from "styled-components"
 import { UserName } from "password/features/users/UserTypes"
@@ -31,44 +27,57 @@ export default function PositionAssign() {
   const userName = useSelector(passwordSelectors.userName)
   const roomName = useSelector(passwordSelectors.roomName)
   const socket = useSelector(passwordSelectors.socket)
-  const dispatch = useDispatch()
-  const history = useHistory()
 
+  const history = useHistory()
   const applyPosition = React.useCallback(
     (key: number) => {
-      applyPositionService({
-        socket: socket!,
-        dispatch,
-        history,
-        position: key
+      if (!socket) {
+        return
+      }
+      socket.emit("applyPosition", {
+        position: key,
       })
     },
-    [dispatch, history, socket]
+    [socket]
   )
 
   const startGame = React.useCallback(() => {
-    startGameService({ socket: socket!, dispatch, history })
-  }, [dispatch, history, socket])
+    if (!socket) {
+      return
+    }
+    socket.emit("startGameRequest")
+  }, [socket])
 
   const [roomUsers, setRoomUsers] = React.useState([] as UserName[])
   const [playButtonVisibility, setPlayButtonVisibility] = React.useState(false)
   const [roomPositions, setRoomPositions] = React.useState([] as UserName[])
 
+  React.useEffect(() => {
+    if (!socket) {
+      return
+    }
+    socket.on("readyPlay", () => {
+      setPlayButtonVisibility(true)
+    })
+    socket.on("roomUsers", (roomUsers: UserName[]) => {
+      setRoomUsers(roomUsers)
+    })
+    socket.on("roomPositions", (roomPositions: UserName[]) => {
+      setRoomPositions(roomPositions)
+    })
+    socket.on("startGameSuccess", () => {
+      history.push(routes.password.playGame)
+      socket.removeListener("startGameSuccess")
+    })
+    return () => {
+      socket.removeListener("readyPlay")
+      socket.removeListener("startGameSuccess")
+    }
+  }, [history, socket])
+
   if (!socket) {
     return <Redirect to={routes.password.home} />
   }
-
-  socket.on("readyPlay", () => {
-    setPlayButtonVisibility(true)
-  })
-
-  socket.on("roomPositions", (roomPositions: UserName[]) => {
-    setRoomPositions(roomPositions)
-  })
-
-  socket.on("roomUsers", (roomUsers: UserName[]) => {
-    setRoomUsers(roomUsers)
-  })
 
   return (
     <>

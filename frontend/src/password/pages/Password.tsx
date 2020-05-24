@@ -3,12 +3,13 @@ import { Route, Switch, withRouter } from "react-router"
 import { useSelector, useDispatch } from "react-redux"
 import { Alert } from "antd"
 
-import Signup from "password/components/Signup"
+import Signup from "password/pages/Signup"
 import routes from "routes"
 
-import PositionAssign from "./PositionAssign"
+import PositionAssign from "./PossitionAssign/PositionAssign"
 import passwordSelectors from "../features/general/passwordSelector"
 import { deleteError } from "password/features/general/passwordActions"
+import PlayGame from "./PlayGame/PlayGame"
 
 export interface PasswordProps {}
 
@@ -35,6 +36,7 @@ function Password() {
           path={routes.password.positionAssign}
           component={PositionAssign}
         />
+        <Route path={routes.password.playGame} component={PlayGame} />
       </Switch>
     </>
   )

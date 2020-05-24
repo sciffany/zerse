@@ -15,6 +15,7 @@ const handler = (socket, gameIo, lounge: Lounge) => ({
   userName,
   roomName
 }: SignupDetails) => {
+  console.log("sign up received from", userName)
   try {
     const room: Room =
       lounge.findRoomByName(roomName) || lounge.createRoom(roomName)
@@ -24,8 +25,8 @@ const handler = (socket, gameIo, lounge: Lounge) => ({
     socket.join(room.id)
     socket.emit("signUpSuccess")
 
-    socket.roomId = room.id
-    socket.userId = user.id
+    socket.room = room
+    socket.user = user
 
     gameIo.to(room.id).emit("roomUsers", room.getUserNames())
     socket.emit("roomPositions", room.getPositions())

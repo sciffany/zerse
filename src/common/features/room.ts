@@ -1,6 +1,7 @@
 import User, { UserName, UserId, SocketId } from "./user"
 import Lounge from "./lounge"
 import { PositionNumber } from "./position"
+import Game from "./game"
 
 export type RoomName = string
 export type RoomId = number
@@ -13,6 +14,7 @@ export default abstract class Room {
   private positions: User[]
   private lounge: Lounge
   protected abstract capacity: number
+  public game: Game
 
   constructor(name: string, lounge: Lounge) {
     this.name = name
@@ -20,6 +22,10 @@ export default abstract class Room {
     this.id = Room.idAssign++
     this.users = []
     this.positions = []
+  }
+
+  addGame(game: Game) {
+    this.game = game
   }
 
   createUser(userName: UserName, socketId: SocketId): User {
@@ -33,18 +39,18 @@ export default abstract class Room {
   }
 
   existingUsers() {
-    return this.users.filter(user => !!user)
+    return this.users.filter((user) => !!user)
   }
 
   findUserByName(userName: UserName): User {
     if (!userName) {
       throw new Error("User name cannot be empty.")
     }
-    return this.existingUsers().find(user => user.name === userName)
+    return this.existingUsers().find((user) => user.getName() === userName)
   }
 
   findUserById(userId: UserId): User {
-    const user = this.existingUsers().find(user => user.id === userId)
+    const user = this.existingUsers().find((user) => user.id === userId)
     if (!user) {
       throw new Error("Cannot find user.")
     }
@@ -52,11 +58,11 @@ export default abstract class Room {
   }
 
   getUserNames(): UserName[] {
-    return this.existingUsers().map(user => user.name)
+    return this.existingUsers().map((user) => user.getName())
   }
 
   deleteUser(userId: UserId): void {
-    const index = this.users.findIndex(user => user && user.id === userId)
+    const index = this.users.findIndex((user) => user && user.id === userId)
     if (index === undefined) {
       throw new Error("Cannot find user to delete.")
     }
@@ -79,19 +85,19 @@ export default abstract class Room {
   }
 
   deleteUserFromPositions(userId: UserId) {
-    const index = this.positions.findIndex(user => user && user.id === userId)
+    const index = this.positions.findIndex((user) => user && user.id === userId)
     this.positions[index] = undefined
   }
 
   getPositions(): UserName[] {
-    return this.positions.map(user => (user ? user.name : undefined))
+    return this.positions.map((user) => (user ? user.getName() : undefined))
   }
 
   getLeader(): User {
-    return this.users.find(user => !!user)
+    return this.users.find((user) => !!user)
   }
 
   arePositionsFilled(): boolean {
-    return this.positions.filter(user => !!user).length === this.capacity
+    return this.positions.filter((user) => !!user).length === this.capacity
   }
 }
