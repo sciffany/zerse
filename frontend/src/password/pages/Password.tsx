@@ -1,23 +1,23 @@
-import React from "react"
-import { Route, Switch, withRouter } from "react-router"
-import { useSelector, useDispatch } from "react-redux"
-import { Alert } from "antd"
+import React from "react";
+import { Route, Switch, withRouter } from "react-router";
+import { useSelector, useDispatch } from "react-redux";
+import { Alert } from "antd";
 
-import Signup from "password/pages/Signup"
-import routes from "routes"
+import Signup from "password/pages/Signup";
+import routes from "routes";
 
-import PositionAssign from "./PossitionAssign/PositionAssign"
-import passwordSelectors from "../features/general/passwordSelector"
-import { deleteError } from "password/features/general/passwordActions"
-import PlayGame from "./PlayGame/PlayGame"
+import PositionAssign from "./PossitionAssign/PositionAssign";
+import passwordSelectors from "../features/general/passwordSelector";
+import { deleteError } from "password/features/general/passwordActions";
+import PlayGame from "./PlayGame/PlayGame";
 
 export interface PasswordProps {}
 
 function Password() {
-  const errorMessage = useSelector(passwordSelectors.error)
-  const dispatch = useDispatch()
+  const errorMessage = useSelector(passwordSelectors.error);
+  const dispatch = useDispatch();
 
-  const closeModal = () => dispatch(deleteError())
+  const closeModal = () => dispatch(deleteError());
 
   return (
     <>
@@ -39,7 +39,7 @@ function Password() {
         <Route path={routes.password.playGame} component={PlayGame} />
       </Switch>
     </>
-  )
+  );
 }
 
-export default withRouter(Password)
+export default withRouter(Password);

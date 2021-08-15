@@ -1,82 +1,84 @@
-import React from "react"
-import { PositionRecord } from "./PlayerButton"
-import Stack, { HorizontalStack } from "password/common/Stack"
-import Divider from "password/common/Divider"
-import { Button } from "password/common/Styles"
-import Centered from "password/common/Centered"
+import React from "react";
+import { PositionRecord } from "./PlayerButton";
+import Stack, { HorizontalStack } from "password/common/Stack";
+import Divider from "password/common/Divider";
+import { Button } from "password/common/Styles";
+import Centered from "password/common/Centered";
 
-import passwordSelectors from "password/features/general/passwordSelector"
-import { Spin } from "antd"
-import { useSelector } from "react-redux"
-import { Redirect, useHistory } from "react-router"
-import routes from "routes"
-import styled from "styled-components"
-import { UserName } from "password/features/users/UserTypes"
+import passwordSelectors from "password/features/general/passwordSelector";
+import { Spin } from "antd";
+import { useSelector } from "react-redux";
+import { Redirect, useHistory } from "react-router";
+import routes from "routes";
+import styled from "styled-components";
+import { UserName } from "password/features/users/UserTypes";
 
-const Text = styled.div``
+const Text = styled.div``;
 
 const BoldText = styled.div`
   font-weight: bold;
-`
+`;
 
 const RightAlign = styled.div`
   display: flex;
-`
+`;
 
 export default function PositionAssign() {
-  const userName = useSelector(passwordSelectors.userName)
-  const roomName = useSelector(passwordSelectors.roomName)
-  const socket = useSelector(passwordSelectors.socket)
+  const userName = useSelector(passwordSelectors.userName);
+  const roomName = useSelector(passwordSelectors.roomName);
+  const socket = useSelector(passwordSelectors.socket);
 
-  const history = useHistory()
+  const history = useHistory();
   const applyPosition = React.useCallback(
     (key: number) => {
       if (!socket) {
-        return
+        return;
       }
       socket.emit("applyPosition", {
         position: key,
-      })
+      });
     },
     [socket]
-  )
+  );
 
   const startGame = React.useCallback(() => {
     if (!socket) {
-      return
+      return;
     }
-    socket.emit("startGameRequest")
-  }, [socket])
+    socket.emit("startGameRequest");
+  }, [socket]);
 
-  const [roomUsers, setRoomUsers] = React.useState([] as UserName[])
-  const [playButtonVisibility, setPlayButtonVisibility] = React.useState(false)
-  const [roomPositions, setRoomPositions] = React.useState([] as UserName[])
+  const [roomUsers, setRoomUsers] = React.useState([] as UserName[]);
+  const [playButtonVisibility, setPlayButtonVisibility] = React.useState(false);
+  const [roomPositions, setRoomPositions] = React.useState([] as UserName[]);
 
   React.useEffect(() => {
     if (!socket) {
-      return
+      return;
     }
     socket.on("readyPlay", () => {
-      setPlayButtonVisibility(true)
-    })
+      setPlayButtonVisibility(true);
+    });
     socket.on("roomUsers", (roomUsers: UserName[]) => {
-      setRoomUsers(roomUsers)
-    })
+      setRoomUsers(roomUsers);
+    });
     socket.on("roomPositions", (roomPositions: UserName[]) => {
-      setRoomPositions(roomPositions)
-    })
+      setRoomPositions(roomPositions);
+    });
     socket.on("startGameSuccess", () => {
-      history.push(routes.password.playGame)
-      socket.removeListener("startGameSuccess")
-    })
+      history.push(routes.password.playGame);
+      socket.removeListener("startGameSuccess");
+    });
     return () => {
-      socket.removeListener("readyPlay")
-      socket.removeListener("startGameSuccess")
-    }
-  }, [history, socket])
+      socket.removeListener("roomUsers");
+      socket.removeListener("roomPositions");
+      socket.removeListener("readyPlay");
+      socket.removeListener("startGameSuccess");
+    };
+  }, [history, socket]);
 
   if (!socket) {
-    return <Redirect to={routes.password.home} />
+    return <Redirect to={routes.password.home} />;
   }
 
   return (
@@ -133,5 +135,5 @@ export default function PositionAssign() {
         )}
       </Stack>
     </>
-  )
+  );
 }
