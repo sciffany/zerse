@@ -34,9 +34,7 @@ export default function Signup() {
   }, [dispatch, history, roomName, socket, userName]);
 
   if (!socket) {
-    const newSocket = socketIOClient(
-      `${config.serverUrl}:${config.serverPort}/password`
-    );
+    const newSocket = socketIOClient.connect(`${config.serverUrl}/password`);
     dispatch(addSocket(newSocket));
   }
 
