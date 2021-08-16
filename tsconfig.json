@@ -5,7 +5,10 @@
     "sourceMap": true,
     "target": "es2019",
     "outDir": "build",
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "paths": {
+      "src/*": ["./src/*"]
+    }
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "**/*.spec.ts"]
