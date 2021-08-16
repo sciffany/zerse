@@ -1,4 +1,4 @@
 export default {
-  serverUrl: "localhost",
-  serverPort: 4001
-}
+  serverUrl: "https://zerse.herokuapp.com/",
+  serverPort: 4001,
+};
