@@ -1,41 +1,70 @@
-import Game from "common/features/game"
-import Round from "./passwordRound"
-import Room from "./passwordRoom"
-import fetch from "node-fetch"
-import { Word } from "password/passwordTypes"
+import Game from "common/features/game";
+import Room from "./passwordRoom";
+import fetch from "node-fetch";
+import { Word } from "password/passwordTypes";
+import { Team } from "password/handlers/startGame";
+import PasswordRoom from "./passwordRoom";
+import axios from "axios";
 
-const myApiKey = "ZMJN789H"
-const numberOfWords = 16
-const urlBase = `https://random-word-api.herokuapp.com`
+const myApiKey = "ZMJN789H";
+const numberOfWords = 16;
+const urlBase = `https://random-word-api.herokuapp.com`;
 
 export default class PasswordGame extends Game {
-  public rounds: Round[]
-  public words: Word[]
+  public currentRound: number;
+  public currentWord: string;
+  public currentPoints: number = 10;
+  public whoseTurn: string;
+  public scores: number[] = [0, 0];
+  public room: PasswordRoom;
 
-  constructor(room: Room) {
-    super(room)
-    this.init()
+  constructor(room: PasswordRoom) {
+    super();
+    this.room = room;
+    room.game = this;
+    this.init();
   }
+
   init() {
-    this.generateWords()
+    this.generateWords();
+    this.currentRound = 0;
   }
 
   async generateWords() {
-    this.words = await fetch(
-      `${urlBase}/word?key=${myApiKey}&number=${numberOfWords}`
-    )
-    return this.words
+    const result = await axios.get(`${urlBase}/word?number=${numberOfWords}`);
+    return result;
   }
 
-  getNextWord() {
-    var index = 0
-    if (this.words[index]) {
-      const word = this.words[index]
-      index++
-      return word
-    } else {
-      index = 0
-      return [this.generateWords()]
-    }
+  async getNextWord() {
+    const newWords = await this.generateWords();
+    this.currentWord = newWords.data[0];
+  }
+
+  getWord() {
+    return this.currentWord;
+  }
+
+  setFirstPlayerInRound() {
+    this.whoseTurn = this.room.getPositions()[this.currentRound % 4].socketId;
+  }
+
+  advanceToNextPlayer() {
+    const currentPlayerIndex = this.room
+      .getPositions()
+      .findIndex((user) => user.socketId === this.whoseTurn);
+    this.whoseTurn =
+      this.room.getPositions()[(currentPlayerIndex + 1) % 4].socketId;
+  }
+
+  advanceToNextRound() {
+    this.currentRound++;
+    this.getNextWord();
+  }
+
+  getTeams(): Team[] {
+    return this.room.teams.map((team, teamIndex) => {
+      team.score = this.scores[teamIndex];
+      return team;
+    });
   }
 }

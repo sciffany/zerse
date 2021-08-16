@@ -37,7 +37,6 @@ export default function Signup() {
     const newSocket = socketIOClient(
       `${config.serverUrl}:${config.serverPort}/password`
     );
-    console.log(newSocket);
     dispatch(addSocket(newSocket));
   }
 

@@ -1,29 +1,30 @@
-import Lounge from "common/features/lounge"
-import { PasswordSocket } from "password/passwordTypes"
+import Lounge from "common/features/lounge";
+import { PasswordSocket } from "password/passwordTypes";
 
 type ApplyPositionDetails = {
-  position: number
-}
+  position: number;
+};
 
 export default function handleApplyPosition(socket, gameIo, lounge: Lounge) {
-  socket.on("applyPosition", handler(socket, gameIo, lounge))
+  socket.on("applyPosition", handler(socket, gameIo, lounge));
 }
 
-const handler = (socket: PasswordSocket, gameIo, _: Lounge) => ({
-  position,
-}: ApplyPositionDetails) => {
-  console.log("apply position from", socket.user.name, position)
+const handler =
+  (socket: PasswordSocket, gameIo, _: Lounge) =>
+  ({ position }: ApplyPositionDetails) => {
+    console.log("apply position from", socket.user?.username, position);
 
-  const { user, room } = socket
-  try {
-    if (room.isPositionEmpty(position)) {
-      room.assignPosition(position, user.id)
+    const { user, room } = socket;
+    try {
+      if (room.isPositionEmpty(position)) {
+        room.assignPosition(position, user.id);
+      }
+      if (room.arePositionsFilled()) {
+        gameIo.to(room.getLeader().socketId).emit("readyPlay");
+      }
+      gameIo.to(room.id).emit("roomPositions", room.getUsernamesByPosition());
+    } catch (err) {
+      console.log(err.message);
+      socket.emit("errorMessage", err.message);
     }
-    if (room.arePositionsFilled()) {
-      gameIo.to(room.getLeader().socketId).emit("readyPlay")
-    }
-    gameIo.to(room.id).emit("roomPositions", room.getPositions())
-  } catch (err) {
-    socket.emit("errorMessage", err.message)
-  }
-}
+  };

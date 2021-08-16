@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { ChatMessage, PasswordGameState, PositionType } from "./PlayGame";
+import { ChatMessage, PasswordGameState, PositionType } from "./PlayGameTypes";
 import React from "react";
 
 const LeftAlign = styled.div`

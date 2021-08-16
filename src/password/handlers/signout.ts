@@ -1,5 +1,5 @@
-import Lounge from "common/features/lounge"
-import { PasswordSocket } from "password/passwordTypes"
+import Lounge from "common/features/lounge";
+import { PasswordSocket } from "password/passwordTypes";
 
 export default function handleSignout(
   socket: PasswordSocket,
@@ -7,24 +7,24 @@ export default function handleSignout(
   lounge: Lounge
 ) {
   const signOut = () => {
-    const { room, user } = socket
-    console.log("User disconnected")
+    const { room, user } = socket;
+    console.log("User disconnected");
     if (!room || !user) {
-      return
+      return;
     }
-    room.deleteUser(user.id)
+    room.deleteUser(user.id);
 
-    gameIo.to(room.id).emit("roomUsers", room.getUserNames())
+    gameIo.to(room.id).emit("roomUsers", room.getUserNames());
 
     if (room.isEmpty()) {
-      lounge.deleteRoom(room.id)
+      lounge.deleteRoom(room.id);
     } else {
       gameIo.to(room.id).emit("disconnect", {
         listOfNames: room.getUserNames(),
-      })
+      });
     }
-  }
+  };
 
-  socket.on("signOut", signOut)
-  socket.on("disconnect", signOut)
+  socket.on("signOut", signOut);
+  socket.on("disconnect", signOut);
 }
