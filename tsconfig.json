@@ -7,7 +7,7 @@
     "outDir": "build",
     "baseUrl": "src",
     "paths": {
-      "*": ["/src/*"]
+      "*.ts": ["src/*.ts"]
     }
   },
   "include": ["src/**/*.ts"],
