@@ -8,6 +8,7 @@
     "server": "babel-node ./src/main.ts",
     "dev": "NODE_ENV=development npm-run-all server"
   },
+  "type" : "module",
   "dependencies": {
     "@types/node": "^12.7.11",
     "axios": "^0.21.1",
