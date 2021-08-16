@@ -31,7 +31,7 @@ export default class PasswordGame extends Game {
     data.split("\n").filter((line) => {
       const [content, freq] = line.split(" ");
       const len = content.length;
-      if (parseInt(freq, 10) > 1.7 && parseInt(freq, 10) > 3 && len < 9) {
+      if (parseInt(freq, 10) > 15 && len < 9) {
         words.push(content);
       }
     });
