@@ -7,6 +7,7 @@ import handleApplyPosition from "./handlers/applyPosition";
 import handleStartGame from "./handlers/startGame";
 import PasswordLounge from "./features/passwordLounge";
 import { PasswordSocket } from "./passwordTypes";
+import handlePasswordAttempt from "./handlers/game";
 
 export class PasswordServer extends GameServer {
   private lounge: Lounge;
@@ -20,6 +21,7 @@ export class PasswordServer extends GameServer {
     handleSignup(socket, this.gameIo, this.lounge);
     handleApplyPosition(socket, this.gameIo, this.lounge);
     handleStartGame(socket, this.gameIo, this.lounge);
+    handlePasswordAttempt(socket, this.gameIo, this.lounge);
     handleSignout(socket, this.gameIo, this.lounge);
   }
 }

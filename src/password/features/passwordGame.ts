@@ -2,7 +2,7 @@ import Game from "common/features/game";
 import Room from "./passwordRoom";
 import fetch from "node-fetch";
 import { Word } from "password/passwordTypes";
-import { Team } from "password/handlers/startGame";
+import { ChatMessage, Team } from "password/handlers/startGame";
 import PasswordRoom from "./passwordRoom";
 import axios from "axios";
 
@@ -17,6 +17,7 @@ export default class PasswordGame extends Game {
   public whoseTurn: string;
   public scores: number[] = [0, 0];
   public room: PasswordRoom;
+  public chatMessages: ChatMessage[] = [];
 
   constructor(room: PasswordRoom) {
     super();
@@ -56,9 +57,16 @@ export default class PasswordGame extends Game {
       this.room.getPositions()[(currentPlayerIndex + 1) % 4].socketId;
   }
 
-  advanceToNextRound() {
+  async advanceToNextRound(teamNumber: number) {
     this.currentRound++;
-    this.getNextWord();
+    await this.getNextWord();
+    this.chatMessages = [];
+    this.scores[teamNumber] += this.currentPoints;
+    this.currentPoints = 10;
+    this.room.reversePositions();
+    const whoseTeamTurn = Math.floor(this.currentRound / 2) % 2;
+    this.whoseTurn = this.room.getPositions()[whoseTeamTurn * 2].socketId;
+    console.log(this.currentWord);
   }
 
   getTeams(): Team[] {

@@ -44,6 +44,7 @@ export default function PlayGame() {
 
   React.useEffect(() => {
     socket?.on("gameState", (passwordGameState: PasswordGameState) => {
+      console.log(passwordGameState);
       setPasswordGameState(passwordGameState);
     });
     socket?.on("timer", (timer: number) => {
@@ -70,7 +71,7 @@ export default function PlayGame() {
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div>
             Word:{" "}
-            {passwordGameState.currentPlayers ? (
+            {currentPlayer.positionType === PositionType.HINTER ? (
               <b>{passwordGameState.currentWord}</b>
             ) : (
               <b>???</b>
@@ -88,6 +89,7 @@ export default function PlayGame() {
             :
             <Input
               style={{ width: 200 }}
+              value={currentText}
               onChange={(e) => setCurrentText(e.target.value)}
             ></Input>
             <Button width={100} height={30} onClick={onSend}>

@@ -4,7 +4,7 @@ import { PasswordPlayer, Team } from "password/handlers/startGame";
 import PasswordGame from "./passwordGame";
 
 export default class PasswordRoom extends Room {
-  protected capacity = 1;
+  protected capacity = 4;
   public game: PasswordGame;
   public teams: Team[] = [];
 
@@ -29,8 +29,20 @@ export default class PasswordRoom extends Room {
     const user: User = this.findUserById(userId);
     this.positions[position] = user;
     const teamNumber = Math.floor(position / 2);
-    this.teams[teamNumber] = { players: [], score: 0 };
+    if (!this.teams[teamNumber])
+      this.teams[teamNumber] = { players: [], score: 0 };
     this.teams[teamNumber].players[position % 2] = user.socketId;
     user.changePosition(position);
+  }
+
+  reversePositions() {
+    const reversePositions = this.positions.map((_, index) => {
+      if (index % 2 === 0) {
+        return this.positions[index + 1];
+      } else {
+        return this.positions[index - 1];
+      }
+    });
+    this.positions = reversePositions;
   }
 }
