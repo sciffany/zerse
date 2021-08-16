@@ -8,8 +8,7 @@
     "dev": "NODE_ENV=development npm-run-all server",
     "start": "node build/main.js",
     "build": "tsc",
-    "postinstall": "npm run build",
-
+    "postinstall": "npm run build"
   },
   "dependencies": {
     "@types/node": "^12.7.11",
