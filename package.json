@@ -6,9 +6,8 @@
     "start:dev": "nodemon -r tsconfig-paths/register src/main.ts",
     "server": "babel-node ./src/main.ts",
     "dev": "NODE_ENV=development npm-run-all server",
-    "start": "node build/main.js",
-    "build": "tsc",
-    "postinstall": "npm run build"
+    "start": "node dist/main.js",
+    "postinstall": "tsc"
   },
   "dependencies": {
     "@types/node": "^12.7.11",

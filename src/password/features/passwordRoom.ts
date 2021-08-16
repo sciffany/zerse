@@ -1,7 +1,7 @@
 import Room from "common/features/room";
 import User, { UserId } from "common/features/user";
 import { PasswordPlayer, Team } from "password/handlers/startGame";
-import PasswordGame from "./passwordGame";
+import PasswordGame from "./passwordGameClass";
 
 export default class PasswordRoom extends Room {
   protected capacity = 4;

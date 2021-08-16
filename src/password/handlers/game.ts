@@ -1,5 +1,4 @@
 import Lounge from "common/features/lounge";
-import PasswordGame from "password/features/passwordGame";
 import { PasswordSocket } from "password/passwordTypes";
 import { PasswordGameState, PositionType } from "./startGame";
 
