@@ -29,7 +29,7 @@ export default abstract class GameServer {
 
   listen() {
     this.server.listen(process.env.PORT || GameServer.PORT, () =>
-      console.log(`Listening on port ${GameServer.PORT}`)
+      console.log(`Listening on port ${process.env.PORT || GameServer.PORT}`)
     );
 
     this.gameIo.on("connection", (socket: PasswordSocket) => {
