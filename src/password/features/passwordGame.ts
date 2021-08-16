@@ -1,8 +1,9 @@
 import Game from "common/features/game";
 import { ChatMessage, Team } from "password/handlers/startGame";
 import PasswordRoom from "./passwordRoom";
-const fs = require("fs");
-const util = require("util");
+import * as fs from "fs";
+import * as util from "util";
+
 const readFile = util.promisify(fs.readFile);
 export default class PasswordGame extends Game {
   public currentRound: number = 0;
