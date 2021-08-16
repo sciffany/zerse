@@ -21,6 +21,8 @@ export type PasswordGameState = {
 
   isWhoseTurn: string;
   teams: Team[];
+
+  announcement: string;
 };
 
 export type ChatMessage = {
@@ -97,4 +99,6 @@ export const initialState: PasswordGameState = {
     { players: ["0x1", "0x2"], score: 40 },
     { players: ["0x3", "0x4"], score: 54 },
   ],
+
+  announcement: "Jordan guessed it! The word was 'lackadaisical'",
 };

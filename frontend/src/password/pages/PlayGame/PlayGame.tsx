@@ -16,6 +16,7 @@ import {
   PositionType,
   Team,
 } from "./PlayGameTypes";
+import { Alert } from "antd";
 
 const Text = styled.div`
   font-size: 20px;
@@ -67,6 +68,13 @@ export default function PlayGame() {
   }
   return (
     <>
+      {passwordGameState.announcement && (
+        <Alert
+          message={`${passwordGameState.announcement}`}
+          type="success"
+          closable
+        />
+      )}
       <Stack spacing={10}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div>

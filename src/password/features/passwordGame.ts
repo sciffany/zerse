@@ -66,7 +66,6 @@ export default class PasswordGame extends Game {
     this.room.reversePositions();
     const whoseTeamTurn = Math.floor(this.currentRound / 2) % 2;
     this.whoseTurn = this.room.getPositions()[whoseTeamTurn * 2].socketId;
-    console.log(this.currentWord);
   }
 
   getTeams(): Team[] {

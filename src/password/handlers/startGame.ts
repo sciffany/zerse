@@ -29,6 +29,8 @@ export type PasswordGameState = {
 
   isWhoseTurn: string;
   teams: Team[];
+
+  announcement: string;
 };
 
 export type ChatMessage = {
@@ -61,6 +63,7 @@ const handler = (socket: PasswordSocket, gameIo, _: Lounge) => async () => {
       chatMessages: [],
       isWhoseTurn: room.game.whoseTurn,
       teams: room.game.getTeams(),
+      announcement: "",
     };
 
     gameIo.to(room.id).emit("gameState", gameState);

@@ -18,10 +18,14 @@ const handler =
       const type: PositionType =
         room.getCurrentPlayers()[socket.id].positionType;
 
+      let announcement = "";
       if (
         type === PositionType.GUESSER &&
         game.currentWord === passwordAttempt
       ) {
+        announcement = `${
+          room.getCurrentPlayers()[socket.id].username
+        } has guessed the word. The word was '${game.currentWord}'`;
         // If win
         await game.advanceToNextRound(
           room.getCurrentPlayers()[socket.id].teamNumber
@@ -36,6 +40,12 @@ const handler =
         });
         if (type === PositionType.GUESSER) {
           game.currentPoints--;
+          // lose
+          if (game.currentPoints === 0) {
+            await game.advanceToNextRound(
+              room.getCurrentPlayers()[socket.id].teamNumber
+            );
+          }
         }
       }
 
@@ -47,6 +57,7 @@ const handler =
         chatMessages: game.chatMessages,
         isWhoseTurn: room.game.whoseTurn,
         teams: room.game.getTeams(),
+        announcement,
       };
 
       gameIo.to(room.id).emit("gameState", gameState);
