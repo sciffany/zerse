@@ -1,5 +1,5 @@
 import Lounge from "common/features/lounge";
-import PasswordGame from "password/features/passwordGameClass";
+import PasswordGame from "../features/passwordGameClass";
 import { PasswordSocket } from "password/passwordTypes";
 
 export default function handlePlayGame(socket, gameIo, lounge: Lounge) {
