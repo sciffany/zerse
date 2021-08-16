@@ -20,7 +20,7 @@ const handler =
       let announcement = "";
       if (
         type === PositionType.GUESSER &&
-        game.currentWord === passwordAttempt
+        game.currentWord.toLowerCase() === passwordAttempt.toLowerCase()
       ) {
         announcement = `${
           room.getCurrentPlayers()[socket.id].username
