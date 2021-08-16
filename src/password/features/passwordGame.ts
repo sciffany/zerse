@@ -1,44 +1,44 @@
 import Game from "common/features/game";
-import Room from "./passwordRoom";
-import fetch from "node-fetch";
-import { Word } from "password/passwordTypes";
 import { ChatMessage, Team } from "password/handlers/startGame";
 import PasswordRoom from "./passwordRoom";
-import axios from "axios";
-
-const myApiKey = "ZMJN789H";
-const numberOfWords = 16;
-const urlBase = `https://random-word-api.herokuapp.com`;
-
+const fs = require("fs");
+const util = require("util");
+const readFile = util.promisify(fs.readFile);
 export default class PasswordGame extends Game {
-  public currentRound: number;
+  public currentRound: number = 0;
   public currentWord: string;
   public currentPoints: number = 10;
   public whoseTurn: string;
   public scores: number[] = [0, 0];
   public room: PasswordRoom;
   public chatMessages: ChatMessage[] = [];
+  public words: string[] = [];
 
   constructor(room: PasswordRoom) {
     super();
     this.room = room;
     room.game = this;
-    this.init();
   }
 
-  init() {
-    this.generateWords();
-    this.currentRound = 0;
+  async init() {
+    await this.generateWords();
   }
 
   async generateWords() {
-    const result = await axios.get(`${urlBase}/word?number=${numberOfWords}`);
-    return result;
+    const data = await readFile(__dirname + "/wordlist.txt", "utf8");
+    let words = [];
+    data.split("\n").filter((line) => {
+      const [content, freq] = line.split(" ");
+      const len = content.length;
+      if (freq > 1.7 && freq > 5 && len < 9) {
+        words.push(content);
+      }
+    });
+    this.words = this.shuffle(words).slice(0, 100);
   }
 
   async getNextWord() {
-    const newWords = await this.generateWords();
-    this.currentWord = newWords.data[0];
+    this.currentWord = this.words[this.currentRound];
   }
 
   getWord() {
@@ -73,5 +73,26 @@ export default class PasswordGame extends Game {
       team.score = this.scores[teamIndex];
       return team;
     });
+  }
+
+  //Fisher-Yates (aka Knuth) Shuffle
+  shuffle(array: Array<any>) {
+    let currentIndex = array.length,
+      temporaryValue,
+      randomIndex;
+
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+
+      // And swap it with the current element.
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+
+    return array;
   }
 }

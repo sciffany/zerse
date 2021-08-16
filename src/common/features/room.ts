@@ -55,13 +55,7 @@ export default abstract class Room {
     return this.existingUsers().map((user) => user.getName());
   }
 
-  deleteUser(userId: UserId): void {
-    const index = this.users.findIndex((user) => user && user.id === userId);
-    if (index === undefined) {
-      throw new Error("Cannot find user to delete.");
-    }
-    this.users[index] = undefined;
-  }
+  abstract deleteUser(userId: UserId): void;
 
   isEmpty(): boolean {
     return !this.existingUsers().length;

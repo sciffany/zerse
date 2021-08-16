@@ -1,5 +1,5 @@
 import Room from "common/features/room";
-import User from "common/features/user";
+import User, { UserId } from "common/features/user";
 import { PasswordPlayer, Team } from "password/handlers/startGame";
 import PasswordGame from "./passwordGame";
 
@@ -44,5 +44,13 @@ export default class PasswordRoom extends Room {
       }
     });
     this.positions = reversePositions;
+  }
+
+  deleteUser(userId: UserId): void {
+    const index = this.users.findIndex((user) => user && user.id === userId);
+    if (index === undefined) {
+      throw new Error("Cannot find user to delete.");
+    }
+    this.users[index] = undefined;
   }
 }

@@ -52,7 +52,8 @@ const handler = (socket: PasswordSocket, gameIo, _: Lounge) => async () => {
 
     const game = new PasswordGame(room);
 
-    await game.getNextWord();
+    await game.generateWords();
+    game.getNextWord();
     game.whoseTurn = room.getPositions()[0].socketId;
 
     const gameState: PasswordGameState = {
