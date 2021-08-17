@@ -34,7 +34,9 @@ export default function Signup() {
   }, [dispatch, history, roomName, socket, userName]);
 
   if (!socket) {
-    const newSocket = socketIOClient(`${config.serverUrl}/password`);
+    const newSocket = socketIOClient(
+      `${process.env.REACT_APP_SERVER_URL || config.serverUrl}/password`
+    );
     dispatch(addSocket(newSocket));
   }
 
