@@ -17,6 +17,10 @@ import {
   Team,
 } from "./PlayGameTypes";
 import { Alert } from "antd";
+import _ from "lodash";
+
+const correctSound = require("./correct.mp3");
+const wrongSound = require("./wrong.mp3");
 
 const Text = styled.div`
   font-size: 20px;
@@ -46,6 +50,16 @@ export default function PlayGame() {
   React.useEffect(() => {
     socket?.on("gameState", (passwordGameState: PasswordGameState) => {
       console.log(passwordGameState);
+      if (!_.isEmpty(passwordGameState.announcement)) {
+        const correctAudio = new Audio(correctSound);
+        correctAudio.play();
+      } else if (
+        passwordGameState.chatMessages.length > 1 &&
+        passwordGameState.chatMessages.length % 2 === 0
+      ) {
+        const wrongAudio = new Audio(wrongSound);
+        wrongAudio.play();
+      }
       setPasswordGameState(passwordGameState);
     });
     socket?.on("timer", (timer: number) => {
@@ -70,7 +84,7 @@ export default function PlayGame() {
     <>
       {passwordGameState.announcement && (
         <Alert
-          message={`${passwordGameState.announcement}`}
+          message={passwordGameState.announcement}
           type="success"
           closable
         />
@@ -117,7 +131,7 @@ export default function PlayGame() {
           }{" "}
           {passwordGameState.currentPlayers[passwordGameState.isWhoseTurn]
             .positionType === PositionType.HINTER
-            ? "is thinking of a word "
+            ? "is thinking of a hint "
             : "is trying to guess the word "}
           for {passwordGameState.currentPoints} points...
         </Text>
@@ -128,7 +142,12 @@ export default function PlayGame() {
             return (
               <Stack key={Math.random()} spacing={12}>
                 <BoldText>
-                  Team {teamNumber + 1}: {team.score}
+                  <div
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <div>Team {["A", "B"][teamNumber]}</div>
+                    <div>{team.score} pts</div>
+                  </div>
                 </BoldText>
                 {team.players.map((playerId: string, playerNumber: number) => {
                   const player = passwordGameState.currentPlayers[playerId];

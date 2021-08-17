@@ -100,7 +100,7 @@ export default function PositionAssign() {
         </div>
         <HorizontalStack spacing={50}>
           <Stack spacing={12}>
-            <BoldText>Team 1 </BoldText>
+            <BoldText>Team A </BoldText>
             {[0, 1].map((number, index) => (
               <PositionRecord
                 key={number.toString()}
@@ -113,7 +113,7 @@ export default function PositionAssign() {
             ))}
           </Stack>
           <Stack spacing={12}>
-            <BoldText>Team 2 </BoldText>
+            <BoldText>Team B </BoldText>
             {[2, 3].map((number, index) => (
               <PositionRecord
                 key={number.toString()}

@@ -1,3 +1,3 @@
 export default {
-  serverUrl: "https://zerse.herokuapp.com",
+  serverUrl: "localhost:4001",
 };
