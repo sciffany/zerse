@@ -14,7 +14,7 @@ export default function handleSignout(
     }
     room.deleteUser(user.id);
 
-    gameIo.to(room.id).emit("roomUsers", room.getUserNames());
+    gameIo.to(room.id).emit("roomPositions", room.getUsernamesByPosition());
 
     if (room.isEmpty()) {
       lounge.deleteRoom(room.id);

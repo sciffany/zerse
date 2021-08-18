@@ -14,6 +14,9 @@ const handler =
       console.log("password attempt", passwordAttempt);
 
       const game = room.game;
+      if (!room.arePositionsFilled()) {
+        return;
+      }
       const type: PositionType =
         room.getCurrentPlayers()[socket.id].positionType;
 

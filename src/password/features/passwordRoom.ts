@@ -4,7 +4,7 @@ import { PasswordPlayer, Team } from "password/handlers/startGame";
 import PasswordGame from "./passwordGameClass";
 
 export default class PasswordRoom extends Room {
-  protected capacity = 4;
+  protected capacity = 2;
   public game: PasswordGame;
   public teams: Team[] = [];
 
@@ -52,5 +52,13 @@ export default class PasswordRoom extends Room {
       throw new Error("Cannot find user to delete.");
     }
     this.users[index] = undefined;
+
+    const positionIndex = this.positions.findIndex(
+      (user) => user && user.id === userId
+    );
+    if (positionIndex === undefined) {
+      throw new Error("Cannot find user to delete.");
+    }
+    this.positions[positionIndex] = undefined;
   }
 }

@@ -8,6 +8,8 @@ import handleStartGame from "./handlers/startGame";
 import PasswordLounge from "./features/passwordLounge";
 import { PasswordSocket } from "./passwordTypes";
 import handlePasswordAttempt from "./handlers/game";
+import handlePing from "./handlers/handlePing";
+import handleContinueGame from "./handlers/continueGame";
 
 export class PasswordServer extends GameServer {
   private lounge: Lounge;
@@ -18,10 +20,12 @@ export class PasswordServer extends GameServer {
   }
 
   handleSocket(socket: PasswordSocket) {
+    handlePing(socket, this.gameIo, this.lounge);
     handleSignup(socket, this.gameIo, this.lounge);
     handleApplyPosition(socket, this.gameIo, this.lounge);
     handleStartGame(socket, this.gameIo, this.lounge);
     handlePasswordAttempt(socket, this.gameIo, this.lounge);
     handleSignout(socket, this.gameIo, this.lounge);
+    handleContinueGame(socket, this.gameIo, this.lounge);
   }
 }

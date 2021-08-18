@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Redirect } from "react-router";
+import { Redirect, useHistory } from "react-router";
 import { Input } from "antd";
 import styled from "styled-components";
 import Stack, { HorizontalStack } from "password/common/Stack";
@@ -46,6 +46,7 @@ export default function PlayGame() {
     React.useState<PasswordGameState>(initialState);
   const currentPlayer = passwordGameState.currentPlayers[socket?.id || ""];
   const [currentText, setCurrentText] = React.useState<string>("");
+  const history = useHistory();
 
   React.useEffect(() => {
     socket?.on("gameState", (passwordGameState: PasswordGameState) => {
@@ -65,7 +66,24 @@ export default function PlayGame() {
     socket?.on("timer", (timer: number) => {
       setTimer(timer);
     });
-  }, [passwordGameState, setPasswordGameState, socket]);
+    socket?.on("roomPositions", () => {
+      history.push(routes.password.positionAssign, { continueGame: true });
+    });
+    return () => {
+      socket?.removeListener("roomPositions");
+      socket?.removeListener("timer");
+      socket?.removeListener("gameState");
+    };
+  }, [socket, history]);
+
+  React.useEffect(() => {
+    const pingServer = setInterval(() => {
+      socket?.emit("/password/ping");
+    }, 5000);
+    return () => {
+      clearInterval(pingServer);
+    };
+  }, [socket]);
 
   if (!socket) {
     return <Redirect to={routes.password.home} />;
