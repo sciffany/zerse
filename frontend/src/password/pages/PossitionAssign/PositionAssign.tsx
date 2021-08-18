@@ -28,7 +28,7 @@ export default function PositionAssign() {
   const userName = useSelector(passwordSelectors.userName);
   const roomName = useSelector(passwordSelectors.roomName);
   const socket = useSelector(passwordSelectors.socket);
-  const location = useLocation();
+  const location = useLocation<any>();
   const history = useHistory();
 
   const applyPosition = React.useCallback(
