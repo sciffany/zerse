@@ -48,7 +48,7 @@ const handler = (socket: PasswordSocket, gameIo, _: Lounge) => async () => {
   const { user, room } = socket;
   try {
     console.log("start game requested for password");
-    gameIo.to(room.id).emit("startGameSuccess");
+    gameIo.to(room.roomname).emit("startGameSuccess");
 
     const game = new PasswordGame(room);
 
@@ -67,7 +67,7 @@ const handler = (socket: PasswordSocket, gameIo, _: Lounge) => async () => {
       announcement: "",
     };
 
-    gameIo.to(room.id).emit("gameState", gameState);
+    gameIo.to(room.roomname).emit("gameState", gameState);
   } catch (err) {
     socket.emit("errorMessage", err.message);
   }

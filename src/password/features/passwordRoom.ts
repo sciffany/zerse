@@ -1,5 +1,5 @@
 import Room from "common/features/room";
-import User, { UserId } from "common/features/user";
+import User from "common/features/user";
 import { PasswordPlayer, Team } from "password/handlers/startGame";
 import PasswordGame from "./passwordGameClass";
 
@@ -9,24 +9,23 @@ export default class PasswordRoom extends Room {
   public teams: Team[] = [];
 
   getCurrentPlayers(): { [socketId: string]: PasswordPlayer } {
-    const userToPlayerMap: [string, PasswordPlayer][] = this.users.map(
-      (user: User) => {
-        const userInformation: PasswordPlayer = {
-          username: user.getName(),
-          positionNumber: user.getPosition(),
-          positionType: user.getPositionType(this.game.currentRound),
-          socketId: user.socketId,
-          teamNumber: user.getTeamNumber(),
-        };
-        return [user.socketId, userInformation];
-      }
-    );
+    const userToPlayerMap: [string, PasswordPlayer][] = [
+      ...this.userMap.entries(),
+    ].map(([socketId, user]: [string, User]) => {
+      const userInformation: PasswordPlayer = {
+        username: user.getName(),
+        positionNumber: user.getPosition(),
+        positionType: user.getPositionType(this.game.currentRound),
+        socketId,
+        teamNumber: user.getTeamNumber(),
+      };
+      return [socketId, userInformation];
+    });
     return Object.fromEntries(new Map(userToPlayerMap));
   }
 
-  assignPosition(position: number, userId: number) {
-    this.deleteUserFromPositions(userId);
-    const user: User = this.findUserById(userId);
+  assignPosition(position: number, user: User) {
+    this.deleteUserFromPosition(user);
     this.positions[position] = user;
     const teamNumber = Math.floor(position / 2);
     if (!this.teams[teamNumber])
@@ -46,15 +45,11 @@ export default class PasswordRoom extends Room {
     this.positions = reversePositions;
   }
 
-  deleteUser(userId: UserId): void {
-    const index = this.users.findIndex((user) => user && user.id === userId);
-    if (index === undefined) {
-      throw new Error("Cannot find user to delete.");
-    }
-    this.users[index] = undefined;
+  deleteUser(socketId: string): void {
+    this.userMap.delete(socketId);
 
     const positionIndex = this.positions.findIndex(
-      (user) => user && user.id === userId
+      (user: User) => user && user.socketId === socketId
     );
     if (positionIndex === undefined) {
       throw new Error("Cannot find user to delete.");

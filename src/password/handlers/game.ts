@@ -62,7 +62,7 @@ const handler =
         announcement,
       };
 
-      gameIo.to(room.id).emit("gameState", gameState);
+      gameIo.to(room.roomname).emit("gameState", gameState);
     } catch (err) {
       socket.emit("errorMessage", err.message);
     }

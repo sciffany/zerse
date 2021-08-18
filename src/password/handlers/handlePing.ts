@@ -7,7 +7,6 @@ export default function handlePing(socket, gameIo, lounge: Lounge) {
 
 const handler = (socket: PasswordSocket, gameIo, _: Lounge) => async () => {
   try {
-    console.log("ping");
   } catch (err) {
     socket.emit("errorMessage", err.message);
   }

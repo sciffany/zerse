@@ -1,13 +1,13 @@
-import Lounge from "common/features/lounge"
-import Room, { RoomName } from "common/features/room"
-import PasswordRoom from "./passwordRoom"
+import Lounge from "common/features/lounge";
+import Room from "common/features/room";
+import PasswordRoom from "./passwordRoom";
 
 export default class PasswordLounge extends Lounge {
   constructor() {
-    super()
+    super();
   }
 
-  createNewRoom(roomName: RoomName) {
-    return new PasswordRoom(roomName, this)
+  createNewRoom(roomName: string) {
+    return new PasswordRoom(roomName);
   }
 }

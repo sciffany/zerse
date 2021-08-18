@@ -2,32 +2,23 @@ import Room from "./room";
 import { PositionNumber } from "./position";
 import { PositionType } from "password/handlers/startGame";
 
-export type UserName = string;
-export type UserId = number;
-export type SocketId = string;
-
 export default class User {
-  static idAssign: UserId = 1;
-  public id: UserId;
-  public username: UserName;
+  public username: string;
   private room: Room;
   private position: PositionNumber;
-  public socketId: SocketId;
-  private positionType: PositionType;
-  private teamNumber: number;
+  public socketId: string;
 
-  constructor(name: string, socketId: SocketId, room: Room) {
+  constructor(name: string, socketId: string, room: Room) {
     this.username = name;
     this.socketId = socketId;
     this.room = room;
-    this.id = User.idAssign++;
   }
 
   changePosition(position: PositionNumber) {
     this.position = position;
   }
 
-  getName(): UserName {
+  getName(): string {
     return this.username;
   }
 

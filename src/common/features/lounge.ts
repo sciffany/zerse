@@ -1,48 +1,29 @@
-import Room, { RoomName, RoomId } from "../features/room"
+import Room from "../features/room";
 
 export default abstract class Lounge {
-  private rooms: Room[]
+  public roomMap: Map<string, Room>;
 
   constructor() {
-    this.rooms = []
+    this.roomMap = new Map<string, Room>();
   }
 
-  existingRooms() {
-    return this.rooms.filter(room => !!room)
-  }
-
-  findRoomByName(roomName: RoomName): Room {
-    if (!roomName) {
-      throw new Error("Room name cannot be empty.")
+  findRoomByName(roomname: string): Room {
+    if (!roomname) {
+      throw new Error("Room name cannot be empty.");
     }
-    return this.existingRooms().find(room => room.name === roomName)
+    const room = this.roomMap.get(roomname);
+    return room;
   }
 
-  findRoomById(roomId: RoomId): Room {
-    const room = this.existingRooms().find(room => room.id === roomId)
-    if (!room) {
-      throw new Error("Cannot find room.")
-    }
-    return room
+  abstract createNewRoom(roomName: string): Room;
+
+  createRoom(roomname: string): Room {
+    const newRoom = this.createNewRoom(roomname);
+    this.roomMap.set(roomname, newRoom);
+    return newRoom;
   }
 
-  abstract createNewRoom(roomName: RoomName)
-
-  createRoom(roomName: RoomName): Room {
-    const newRoom = this.createNewRoom(roomName)
-    this.rooms.push(newRoom)
-    return newRoom
-  }
-
-  getRoomNameFromId(roomId: RoomId): RoomName {
-    return this.findRoomById(roomId).name
-  }
-
-  deleteRoom(roomId: RoomId) {
-    const index = this.rooms.findIndex(room => room && room.id === roomId)
-    if (index === undefined) {
-      throw new Error("Cannot find room to delete.")
-    }
-    this.rooms[index] = undefined
+  deleteRoom(roomname: string) {
+    this.roomMap.delete(roomname);
   }
 }
