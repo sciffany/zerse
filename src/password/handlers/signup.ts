@@ -1,10 +1,9 @@
-import { UserName } from "common/features/user";
-import Room, { RoomName } from "common/features/room";
+import Room from "common/features/room";
 import Lounge from "common/features/lounge";
 
 type SignupDetails = {
-  userName: UserName;
-  roomName: RoomName;
+  userName: string;
+  roomName: string;
 };
 
 export default function handleSignup(socket, gameIo, lounge: Lounge) {
@@ -21,13 +20,13 @@ const handler =
 
       const user = room.createUser(userName, socket.id);
 
-      socket.join(room.id);
+      socket.join(room.roomname);
       socket.emit("signUpSuccess");
 
       socket.room = room;
       socket.user = user;
 
-      gameIo.to(room.id).emit("roomUsers", room.getUserNames());
+      gameIo.to(room.roomname).emit("roomUsers", room.getUserNames());
       socket.emit("roomPositions", room.getUsernamesByPosition());
     } catch (err) {
       socket.emit("errorMessage", err.message);

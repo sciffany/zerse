@@ -12,6 +12,7 @@ import { Redirect, useHistory } from "react-router";
 import routes from "routes";
 import styled from "styled-components";
 import { UserName } from "password/features/users/UserTypes";
+import { useLocation } from "react-router";
 
 const Text = styled.div``;
 
@@ -27,8 +28,9 @@ export default function PositionAssign() {
   const userName = useSelector(passwordSelectors.userName);
   const roomName = useSelector(passwordSelectors.roomName);
   const socket = useSelector(passwordSelectors.socket);
-
+  const location = useLocation();
   const history = useHistory();
+
   const applyPosition = React.useCallback(
     (key: number) => {
       if (!socket) {
@@ -45,8 +47,12 @@ export default function PositionAssign() {
     if (!socket) {
       return;
     }
-    socket.emit("startGameRequest");
-  }, [socket]);
+    if (location?.state?.continueGame) {
+      socket.emit("continueGameRequest");
+    } else {
+      socket.emit("startGameRequest");
+    }
+  }, [socket, location]);
 
   const [roomUsers, setRoomUsers] = React.useState([] as UserName[]);
   const [playButtonVisibility, setPlayButtonVisibility] = React.useState(false);
@@ -67,9 +73,12 @@ export default function PositionAssign() {
     });
     socket.on("startGameSuccess", () => {
       history.push(routes.password.playGame);
-      socket.removeListener("startGameSuccess");
     });
+    const pingServer = setInterval(() => {
+      socket.emit("/password/ping");
+    }, 5000);
     return () => {
+      clearInterval(pingServer);
       socket.removeListener("roomUsers");
       socket.removeListener("roomPositions");
       socket.removeListener("readyPlay");
@@ -129,7 +138,7 @@ export default function PositionAssign() {
         {playButtonVisibility && (
           <Centered>
             <Button color={"mediumseagreen"} onClick={startGame}>
-              Play Now!
+              {location?.state?.continueGame ? "Continue Game" : "Play Now!"}
             </Button>
           </Centered>
         )}

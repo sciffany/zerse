@@ -14,6 +14,9 @@ const handler =
       console.log("password attempt", passwordAttempt);
 
       const game = room.game;
+      if (!room.arePositionsFilled()) {
+        return;
+      }
       const type: PositionType =
         room.getCurrentPlayers()[socket.id].positionType;
 
@@ -59,7 +62,7 @@ const handler =
         announcement,
       };
 
-      gameIo.to(room.id).emit("gameState", gameState);
+      gameIo.to(room.roomname).emit("gameState", gameState);
     } catch (err) {
       socket.emit("errorMessage", err.message);
     }

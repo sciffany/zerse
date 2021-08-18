@@ -4,7 +4,7 @@ import * as SocketIO from "socket.io";
 import { PasswordSocket } from "password/passwordTypes";
 
 export default abstract class GameServer {
-  private app;
+  private app: any;
   private server: Server;
   private ioServer: SocketIO.Server;
   private static readonly PORT: Number = 4001;

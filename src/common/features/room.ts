@@ -1,87 +1,67 @@
-import User, { UserName, UserId, SocketId } from "./user";
-import Lounge from "./lounge";
+import User from "./user";
 import { PositionNumber } from "./position";
-
-export type RoomName = string;
-export type RoomId = number;
-
 export default abstract class Room {
-  static idAssign: RoomId = 1;
-  public id: RoomId;
-  public name: RoomName;
-  protected users: User[];
+  public roomname: string;
+  public userMap: Map<string, User>;
   protected positions: User[];
-  private lounge: Lounge;
   protected abstract capacity: number;
 
-  constructor(name: string, lounge: Lounge) {
-    this.name = name;
-    this.lounge = lounge;
-    this.id = Room.idAssign++;
-    this.users = [];
+  constructor(roomname: string) {
+    this.roomname = roomname;
+    this.userMap = new Map<string, User>();
     this.positions = [];
   }
 
-  createUser(userName: UserName, socketId: SocketId): User {
-    if (this.findUserByName(userName)) {
+  createUser(username: string, socketId: string): User {
+    if (this.findUserByName(username)) {
       throw new Error("User already exists");
     }
-
-    const newUser = new User(userName, socketId, this);
-    this.users.push(newUser);
+    const newUser = new User(username, socketId, this);
+    this.userMap.set(socketId, newUser);
     return newUser;
   }
 
-  existingUsers() {
-    return this.users.filter((user) => !!user);
-  }
-
-  findUserByName(userName: UserName): User {
-    if (!userName) {
+  findUserByName(username: string): User {
+    if (!username) {
       throw new Error("User name cannot be empty.");
     }
-    return this.existingUsers().find((user) => user.getName() === userName);
+    return [...this.userMap.values()].find(
+      (user: User) => user.getName() === username
+    );
   }
 
-  findUserById(userId: UserId): User {
-    const user = this.existingUsers().find((user) => user.id === userId);
-    if (!user) {
-      throw new Error("Cannot find user.");
-    }
-    return user;
+  findUserById(socketId: string) {
+    return this.userMap[socketId];
   }
 
-  getUserNames(): UserName[] {
-    return this.existingUsers().map((user) => user.getName());
+  getUserNames(): string[] {
+    return [...this.userMap.values()].map((user: User) => user.getName());
   }
 
-  abstract deleteUser(userId: UserId): void;
+  abstract deleteUser(socketId: string): void;
 
   isEmpty(): boolean {
-    return !this.existingUsers().length;
+    return !this.userMap.size;
   }
 
   isPositionEmpty(position: PositionNumber): boolean {
     return !this.positions[position];
   }
 
-  deleteUserFromPositions(userId: UserId) {
-    const index = this.positions.findIndex(
-      (user) => user && user.id === userId
-    );
-    this.positions[index] = undefined;
+  deleteUserFromPosition(userToBeDeleted: User) {
+    this.positions.filter((user) => user !== userToBeDeleted);
   }
 
-  getUsernamesByPosition(): UserName[] {
-    return this.positions.map((user) => (user ? user.getName() : undefined));
+  getUsernamesByPosition(): string[] {
+    return this.positions.map((user: User) => user?.getName());
   }
 
   getLeader(): User {
-    return this.users.find((user) => !!user);
+    return [...this.userMap.values()][0];
   }
 
   arePositionsFilled(): boolean {
-    return this.positions.filter((user) => !!user).length === this.capacity;
+    return this.positions.filter((user) => !!user).length >= this.capacity;
   }
 
   getPositions(): User[] {

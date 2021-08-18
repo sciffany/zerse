@@ -12,14 +12,16 @@ export default function handleSignout(
     if (!room || !user) {
       return;
     }
-    room.deleteUser(user.id);
+    room.deleteUser(socket.id);
 
-    gameIo.to(room.id).emit("roomUsers", room.getUserNames());
+    gameIo
+      .to(room.roomname)
+      .emit("roomPositions", room.getUsernamesByPosition());
 
     if (room.isEmpty()) {
-      lounge.deleteRoom(room.id);
+      lounge.deleteRoom(room.roomname);
     } else {
-      gameIo.to(room.id).emit("disconnect", {
+      gameIo.to(room.roomname).emit("disconnect", {
         listOfNames: room.getUserNames(),
       });
     }

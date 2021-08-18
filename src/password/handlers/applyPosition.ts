@@ -17,12 +17,14 @@ const handler =
     const { user, room } = socket;
     try {
       if (room.isPositionEmpty(position)) {
-        room.assignPosition(position, user.id);
+        room.assignPosition(position, user);
       }
       if (room.arePositionsFilled()) {
         gameIo.to(room.getLeader().socketId).emit("readyPlay");
       }
-      gameIo.to(room.id).emit("roomPositions", room.getUsernamesByPosition());
+      gameIo
+        .to(room.roomname)
+        .emit("roomPositions", room.getUsernamesByPosition());
     } catch (err) {
       console.log(err.message);
       socket.emit("errorMessage", err.message);
