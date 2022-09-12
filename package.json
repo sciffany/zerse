@@ -9,9 +9,6 @@
     "start": "node -r ts-node/register -r tsconfig-paths/register src/main.ts"
   },
   "dependencies": {
-    "@socket.io/cluster-adapter": "^0.2.0",
-    "@socket.io/pm2": "^5.1.0",
-    "@socket.io/sticky": "^1.0.1",
     "@types/node": "^12.7.11",
     "axios": "^0.21.1",
     "babel-preset-env": "^1.7.0",
@@ -21,11 +18,10 @@
     "express": "^4.17.1",
     "node-fetch": "^2.6.0",
     "react-bootstrap": "^1.0.0-beta.14",
-    "socket.io": "^4.5.2",
-    "ts-node": "^10.9.1",
+    "socket.io": "^2.3.0",
+    "ts-node": "^8.5.4",
     "tsconfig-paths": "^3.10.1",
-    "typescript": "^4.8.3",
-    "yarn": "^1.22.19"
+    "typescript": "^4.8.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.4",
