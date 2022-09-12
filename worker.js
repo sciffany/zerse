@@ -1,7 +1,7 @@
-const { createServer } = require("http");
-const { Server } = require("socket.io");
-const { createAdapter } = require("@socket.io/cluster-adapter");
-const { setupWorker } = require("@socket.io/sticky");
+import { createServer } from "http"
+const { Server } require("socket.io");
+import { createAdapter } from "@socket.io/cluster-adapter"
+import { setupWorker } from "@socket.io/sticky"
 
 const httpServer = createServer();
 const io = new Server(httpServer);
