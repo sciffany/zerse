@@ -19,7 +19,7 @@ export class PasswordServer extends GameServer {
     this.lounge = new PasswordLounge();
   }
 
-  handleSocket(socket: PasswordSocket) {
+  handleSocket(socket: any) {
     handlePing(socket, this.gameIo, this.lounge);
     handleSignup(socket, this.gameIo, this.lounge);
     handleApplyPosition(socket, this.gameIo, this.lounge);
