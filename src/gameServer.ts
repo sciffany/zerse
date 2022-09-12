@@ -7,7 +7,7 @@ export default abstract class GameServer {
   private app: any;
   private server: Server;
   private ioServer: SocketIO.Server;
-  private static readonly PORT: Number = 4001;
+  private static readonly PORT: Number = 8080;
   public gameIo;
 
   abstract handleSocket(socket: SocketIO.Socket): void;
