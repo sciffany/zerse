@@ -1,2 +1,2 @@
 [context.production]
-    environment = { REACT_APP_SERVER_URL="ec2-34-203-42-115.compute-1.amazonaws.com" }
+    environment = { REACT_APP_SERVER_URL="ec2-34-203-42-115.compute-1.amazonaws.com:4001" }
